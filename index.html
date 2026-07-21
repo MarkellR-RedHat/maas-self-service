@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaaS Self-Service | Platform & Scale Capability</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;900&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --text: #ffffff;
+      --text-secondary: #cccccc;
+      --text-muted: #999999;
+      --border: #3d3d3d;
+      --amber: #d4910a;
+      --amber-glow: rgba(212, 145, 10, 0.15);
+      --coral: #e05a3a;
+      --coral-glow: rgba(224, 90, 58, 0.15);
+      --blue: #3a7bd5;
+      --blue-glow: rgba(58, 123, 213, 0.15);
+      --green: #2e8b57;
+      --green-glow: rgba(46, 139, 87, 0.15);
+      --purple: #7b5ea7;
+      --purple-glow: rgba(123, 94, 167, 0.15);
+      --font-display: 'Red Hat Display', sans-serif;
+      --font-text: 'Red Hat Text', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .blob-container {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.08;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+
+    .blob-1 {
+      width: 400px;
+      height: 400px;
+      background: #cc0000;
+      top: 10%;
+      left: 10%;
+      animation: float1 22s;
+    }
+
+    .blob-2 {
+      width: 500px;
+      height: 500px;
+      background: #ee0033;
+      bottom: 20%;
+      right: 10%;
+      animation: float2 26s;
+    }
+
+    .blob-3 {
+      width: 350px;
+      height: 350px;
+      background: #a30000;
+      top: 50%;
+      left: 50%;
+      animation: float3 30s;
+    }
+
+    .blob-4 {
+      width: 450px;
+      height: 450px;
+      background: #d4002a;
+      bottom: 10%;
+      left: 20%;
+      animation: float4 28s;
+    }
+
+    @keyframes float1 {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(100px, 80px) scale(1.1); }
+    }
+
+    @keyframes float2 {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(-80px, -100px) scale(0.9); }
+    }
+
+    @keyframes float3 {
+      from { transform: translate(-50%, -50%) scale(1); }
+      to { transform: translate(calc(-50% + 60px), calc(-50% - 60px)) scale(1.15); }
+    }
+
+    @keyframes float4 {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(90px, -70px) scale(1.05); }
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--amber), var(--coral), var(--blue), var(--green));
+      transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 100;
+    }
+
+    .slides-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slides-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slide {
+      flex: 0 0 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 60px 120px;
+    }
+
+    .slide-inner {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .slide-number {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+
+    .slide-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 56px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .slide-subtitle {
+      font-family: var(--font-text);
+      font-weight: 400;
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin-bottom: 48px;
+      max-width: 700px;
+    }
+
+    .slide-body {
+      margin-top: 40px;
+    }
+
+    .anim {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .slide.active .anim {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.active .anim-d1 { transition-delay: 0.1s; }
+    .slide.active .anim-d2 { transition-delay: 0.2s; }
+    .slide.active .anim-d3 { transition-delay: 0.3s; }
+    .slide.active .anim-d4 { transition-delay: 0.4s; }
+    .slide.active .anim-d5 { transition-delay: 0.5s; }
+    .slide.active .anim-d6 { transition-delay: 0.6s; }
+    .slide.active .anim-d7 { transition-delay: 0.7s; }
+    .slide.active .anim-d8 { transition-delay: 0.8s; }
+
+    .funnel-canvas {
+      width: 100%;
+      max-width: 800px;
+      height: 400px;
+      margin: 0 auto;
+    }
+
+    .subscription-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .sub-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sub-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: currentColor;
+    }
+
+    .sub-card.tier-free { color: var(--green); }
+    .sub-card.tier-free::before { background: var(--green); }
+
+    .sub-card.tier-premium { color: var(--blue); }
+    .sub-card.tier-premium::before { background: var(--blue); }
+
+    .sub-card.tier-enterprise { color: var(--purple); }
+    .sub-card.tier-enterprise::before { background: var(--purple); }
+
+    .sub-card h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .quota-meter {
+      width: 120px;
+      height: 120px;
+      margin: 24px auto;
+      position: relative;
+    }
+
+    .quota-meter svg {
+      transform: rotate(-90deg);
+    }
+
+    .quota-meter .quota-bg {
+      stroke: var(--border);
+      fill: none;
+    }
+
+    .quota-meter .quota-fill {
+      stroke: currentColor;
+      fill: none;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 2s ease;
+    }
+
+    .slide.active .quota-meter .quota-fill {
+      stroke-dashoffset: 0;
+    }
+
+    .quota-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .terminal-demo {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .terminal-line {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    .terminal-prompt {
+      color: var(--green);
+    }
+
+    .terminal-key {
+      display: inline-block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 12px;
+      margin-top: 16px;
+      color: var(--amber);
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .usage-bar-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .usage-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .usage-bar h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    .bar-track {
+      height: 32px;
+      background: var(--bg);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      transition: width 3s ease, background-color 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .usage-status {
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .comparison-side {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .comparison-side::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .comparison-before::before { background: var(--coral); }
+    .comparison-after::before { background: var(--green); }
+
+    .comparison-side h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .comparison-stat {
+      margin-bottom: 24px;
+    }
+
+    .comparison-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .comparison-value {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 32px;
+    }
+
+    .comparison-before .comparison-value { color: var(--coral); }
+    .comparison-after .comparison-value { color: var(--green); }
+
+    .footer {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .footer-title {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .footer-links a {
+      color: var(--amber);
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 12px 24px;
+    }
+
+    .nav-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--border);
+      transform: scale(1.05);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .nav-btn:disabled:hover {
+      background: var(--card);
+      transform: scale(1);
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .nav-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-dot.active {
+      background: var(--amber);
+      transform: scale(1.3);
+    }
+
+    @media (max-width: 768px) {
+      .slide {
+        padding: 60px 24px 100px;
+      }
+
+      .slide-title {
+        font-size: 36px;
+      }
+
+      .slide-subtitle {
+        font-size: 16px;
+      }
+
+      .subscription-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="blob-container">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="slides-container">
+    <div class="slides-track" id="slidesTrack">
+
+      <!-- Slide 1: The Bottleneck Problem -->
+      <div class="slide active">
+        <div class="slide-inner">
+          <div class="slide-number anim">01</div>
+          <h2 class="slide-title anim anim-d1">The Bottleneck Problem</h2>
+          <p class="slide-subtitle anim anim-d2">50 teams waiting for LLM access. One admin. No governance.</p>
+          <div class="slide-body">
+            <canvas class="funnel-canvas anim anim-d3" id="funnelCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Enter MaaS -->
+      <div class="slide">
+        <div class="slide-inner">
+          <div class="slide-number anim">02</div>
+          <h2 class="slide-title anim anim-d1">Enter MaaS</h2>
+          <p class="slide-subtitle anim anim-d2">Subscription-based governance. Admin creates policies once.</p>
+          <div class="slide-body">
+            <div class="subscription-cards">
+              <div class="sub-card tier-free anim anim-d3">
+                <h3>Free</h3>
+                <div class="quota-meter">
+                  <svg width="120" height="120">
+                    <circle class="quota-bg" cx="60" cy="60" r="45" stroke-width="10"></circle>
+                    <circle class="quota-fill" cx="60" cy="60" r="45" stroke-width="10"></circle>
+                  </svg>
+                  <div class="quota-value">10K</div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px;">tokens/month</p>
+              </div>
+
+              <div class="sub-card tier-premium anim anim-d4">
+                <h3>Premium</h3>
+                <div class="quota-meter">
+                  <svg width="120" height="120">
+                    <circle class="quota-bg" cx="60" cy="60" r="45" stroke-width="10"></circle>
+                    <circle class="quota-fill" cx="60" cy="60" r="45" stroke-width="10"></circle>
+                  </svg>
+                  <div class="quota-value">100K</div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px;">tokens/month</p>
+              </div>
+
+              <div class="sub-card tier-enterprise anim anim-d5">
+                <h3>Enterprise</h3>
+                <div class="quota-meter">
+                  <svg width="120" height="120">
+                    <circle class="quota-bg" cx="60" cy="60" r="45" stroke-width="10"></circle>
+                    <circle class="quota-fill" cx="60" cy="60" r="45" stroke-width="10"></circle>
+                  </svg>
+                  <div class="quota-value">1M</div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px;">tokens/month</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Self-Service -->
+      <div class="slide">
+        <div class="slide-inner">
+          <div class="slide-number anim">03</div>
+          <h2 class="slide-title anim anim-d1">Self-Service API Key Generation</h2>
+          <p class="slide-subtitle anim anim-d2">No admin bottleneck. Team members generate keys instantly.</p>
+          <div class="slide-body">
+            <div class="terminal-demo anim anim-d3">
+              <div class="terminal-line"><span class="terminal-prompt">$</span> <span id="terminalText1"></span></div>
+              <div class="terminal-line" id="terminalLine2" style="display: none;"><span style="color: var(--green);">✓</span> Authenticated as user@premium-team</div>
+              <div class="terminal-line" id="terminalLine3" style="display: none;"><span class="terminal-prompt">$</span> <span id="terminalText2"></span></div>
+              <div class="terminal-line" id="terminalLine4" style="display: none;"><span style="color: var(--green);">✓</span> API key generated</div>
+              <div id="terminalLine5" style="display: none;">
+                <span class="terminal-key" id="apiKeyText"></span>
+              </div>
+              <div class="terminal-line" id="terminalLine6" style="display: none; margin-top: 16px;"><span style="color: var(--blue);">ℹ</span> Scoped to Premium subscription (100K tokens/month)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Token Quota Enforcement -->
+      <div class="slide">
+        <div class="slide-inner">
+          <div class="slide-number anim">04</div>
+          <h2 class="slide-title anim anim-d1">Token Quota Enforcement</h2>
+          <p class="slide-subtitle anim anim-d2">Real-time visibility. Automatic rate limiting. No surprises.</p>
+          <div class="slide-body">
+            <div class="usage-bar-container anim anim-d3">
+              <div class="usage-bar">
+                <h3>Premium Subscription Usage</h3>
+                <div class="bar-track">
+                  <div class="bar-fill" id="usageBar"></div>
+                </div>
+                <div class="usage-status" id="usageStatus"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Business Impact -->
+      <div class="slide">
+        <div class="slide-inner">
+          <div class="slide-number anim">05</div>
+          <h2 class="slide-title anim anim-d1">Business Impact</h2>
+          <p class="slide-subtitle anim anim-d2">From 3-day wait to 30-second self-service.</p>
+          <div class="slide-body">
+            <div class="comparison">
+              <div class="comparison-side comparison-before anim anim-d3">
+                <h3>BEFORE</h3>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Avg Wait Time</div>
+                  <div class="comparison-value" data-count="3">0</div>
+                  <div style="color: var(--text-secondary); margin-top: 4px;">days</div>
+                </div>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Access Method</div>
+                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">Manual provisioning</div>
+                </div>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Cost Control</div>
+                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">No quotas</div>
+                </div>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Admin Tickets</div>
+                  <div class="comparison-value" data-count="50">0</div>
+                  <div style="color: var(--text-secondary); margin-top: 4px;">per week</div>
+                </div>
+              </div>
+
+              <div class="comparison-side comparison-after anim anim-d4">
+                <h3>AFTER</h3>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Avg Wait Time</div>
+                  <div class="comparison-value" data-count="30">0</div>
+                  <div style="color: var(--text-secondary); margin-top: 4px;">seconds</div>
+                </div>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Access Method</div>
+                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">Self-service</div>
+                </div>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Cost Control</div>
+                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">Quota enforcement</div>
+                </div>
+                <div class="comparison-stat">
+                  <div class="comparison-label">Admin Tickets</div>
+                  <div class="comparison-value" data-count="0">0</div>
+                  <div style="color: var(--text-secondary); margin-top: 4px;">per week</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer anim anim-d5">
+              <div class="footer-name">Markell Rawls</div>
+              <div class="footer-title">AI Developer Advocate, Red Hat</div>
+              <div class="footer-links">
+                <a href="#">GitHub</a>
+                <a href="#">Content Hub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" id="prevBtn">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <div class="nav-dots" id="navDots"></div>
+    <button class="nav-btn" id="nextBtn">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const slidesTrack = document.getElementById('slidesTrack');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const navDots = document.getElementById('navDots');
+
+    // Create navigation dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'nav-dot';
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(i));
+      navDots.appendChild(dot);
+    }
+
+    function updateSlide() {
+      slidesTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+      progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+
+      document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+
+      // Trigger slide-specific animations
+      if (currentSlide === 0) {
+        animateFunnel();
+      } else if (currentSlide === 2) {
+        animateTerminal();
+      } else if (currentSlide === 3) {
+        animateUsageBar();
+      } else if (currentSlide === 4) {
+        animateCounters();
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlide();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        prevSlide();
+      }
+    });
+
+    // Slide 1: Funnel animation
+    function animateFunnel() {
+      const canvas = document.getElementById('funnelCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      const teams = [];
+      const queueX = 100;
+      const funnelX = canvas.width / 2;
+      const exitX = canvas.width - 100;
+
+      for (let i = 0; i < 50; i++) {
+        teams.push({
+          x: queueX + Math.random() * 150,
+          y: Math.random() * canvas.height,
+          speed: 0.3 + Math.random() * 0.5,
+          state: 'queued'
+        });
+      }
+
+      function drawFunnel() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw funnel
+        ctx.fillStyle = 'rgba(224, 90, 58, 0.2)';
+        ctx.strokeStyle = '#e05a3a';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(funnelX - 150, 0);
+        ctx.lineTo(funnelX - 20, canvas.height / 2 - 40);
+        ctx.lineTo(funnelX - 20, canvas.height / 2 + 40);
+        ctx.lineTo(funnelX - 150, canvas.height);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw bottleneck
+        ctx.fillStyle = 'rgba(224, 90, 58, 0.4)';
+        ctx.fillRect(funnelX - 22, canvas.height / 2 - 40, 4, 80);
+
+        // Draw teams
+        teams.forEach(team => {
+          if (team.state === 'queued') {
+            team.x += team.speed;
+            if (team.x > funnelX - 100) {
+              team.y += (canvas.height / 2 - team.y) * 0.02;
+            }
+            if (team.x > funnelX - 30 && Math.abs(team.y - canvas.height / 2) < 50) {
+              if (Math.random() < 0.01) {
+                team.state = 'passing';
+              }
+            }
+          } else if (team.state === 'passing') {
+            team.x += team.speed * 2;
+            if (team.x > exitX) {
+              team.x = queueX + Math.random() * 150;
+              team.y = Math.random() * canvas.height;
+              team.state = 'queued';
+            }
+          }
+
+          ctx.beginPath();
+          ctx.arc(team.x, team.y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = team.state === 'queued' ? '#e05a3a' : '#2e8b57';
+          ctx.fill();
+        });
+
+        requestAnimationFrame(drawFunnel);
+      }
+
+      drawFunnel();
+    }
+
+    // Slide 3: Terminal animation
+    let terminalAnimated = false;
+    function animateTerminal() {
+      if (terminalAnimated) return;
+      terminalAnimated = true;
+
+      const text1 = 'maas-cli login';
+      const text2 = 'maas-cli generate-key';
+      const apiKey = 'sk-maas-premium-a8f3c9d2e1b4';
+
+      let i = 0;
+      const type1 = setInterval(() => {
+        document.getElementById('terminalText1').textContent = text1.substring(0, i);
+        i++;
+        if (i > text1.length) {
+          clearInterval(type1);
+          setTimeout(() => {
+            document.getElementById('terminalLine2').style.display = 'block';
+            setTimeout(() => {
+              document.getElementById('terminalLine3').style.display = 'block';
+              let j = 0;
+              const type2 = setInterval(() => {
+                document.getElementById('terminalText2').textContent = text2.substring(0, j);
+                j++;
+                if (j > text2.length) {
+                  clearInterval(type2);
+                  setTimeout(() => {
+                    document.getElementById('terminalLine4').style.display = 'block';
+                    setTimeout(() => {
+                      document.getElementById('terminalLine5').style.display = 'block';
+                      let k = 0;
+                      const type3 = setInterval(() => {
+                        document.getElementById('apiKeyText').textContent = apiKey.substring(0, k);
+                        k++;
+                        if (k > apiKey.length) {
+                          clearInterval(type3);
+                          setTimeout(() => {
+                            document.getElementById('terminalLine6').style.display = 'block';
+                          }, 300);
+                        }
+                      }, 50);
+                    }, 400);
+                  }, 600);
+                }
+              }, 60);
+            }, 400);
+          }, 600);
+        }
+      }, 60);
+    }
+
+    // Slide 4: Usage bar animation
+    let usageAnimated = false;
+    function animateUsageBar() {
+      if (usageAnimated) return;
+      usageAnimated = true;
+
+      const bar = document.getElementById('usageBar');
+      const status = document.getElementById('usageStatus');
+
+      setTimeout(() => {
+        bar.style.width = '95%';
+        bar.style.backgroundColor = '#d4910a';
+        bar.textContent = '95K / 100K';
+        status.textContent = '⚠ WARNING: 95% quota used';
+        status.style.color = '#d4910a';
+      }, 500);
+
+      setTimeout(() => {
+        bar.style.width = '100%';
+        bar.style.backgroundColor = '#e05a3a';
+        bar.textContent = '100K / 100K';
+        status.textContent = '⛔ RATE LIMITED';
+        status.style.color = '#e05a3a';
+      }, 3500);
+
+      setTimeout(() => {
+        bar.style.width = '0%';
+        bar.textContent = '';
+        status.textContent = '';
+        usageAnimated = false;
+        if (currentSlide === 3) {
+          animateUsageBar();
+        }
+      }, 6000);
+    }
+
+    // Slide 5: Counter animation
+    let countersAnimated = false;
+    function animateCounters() {
+      if (countersAnimated) return;
+      countersAnimated = true;
+
+      const counters = document.querySelectorAll('.comparison-value[data-count]');
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+
+        const interval = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            counter.textContent = target;
+            clearInterval(interval);
+          } else {
+            counter.textContent = Math.floor(current);
+          }
+        }, 16);
+      });
+    }
+
+    // Initialize
+    updateSlide();
+  </script>
+</body>
+</html>

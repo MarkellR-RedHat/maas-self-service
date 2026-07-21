@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaaS Self-Service Subscriptions: From 3-Day Wait to 30-Second Access</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;900&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Red Hat Text', sans-serif;
+            color: #1a1a1a;
+            background: #ffffff;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Red Hat Display', sans-serif;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #CC0000 0%, #EE0000 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .header-banner h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .header-banner .subtitle {
+            font-size: 1.25rem;
+            font-weight: 400;
+            opacity: 0.95;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .meta-card {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem auto;
+            max-width: 860px;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .badge {
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-draft {
+            background: rgba(212, 145, 10, 0.15);
+            color: #d4910a;
+        }
+
+        .badge-maas {
+            background: rgba(58, 123, 213, 0.15);
+            color: #3a7bd5;
+        }
+
+        .badge-platform {
+            background: rgba(123, 94, 167, 0.15);
+            color: #7b5ea7;
+        }
+
+        .badge-rhoai {
+            background: rgba(46, 139, 87, 0.15);
+            color: #2e8b57;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .companion-link {
+            color: #CC0000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .companion-link:hover {
+            text-decoration: underline;
+        }
+
+        article {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 3px solid #EE0000;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.25rem;
+            font-weight: 700;
+        }
+
+        p {
+            line-height: 1.75;
+            margin-bottom: 1.25rem;
+        }
+
+        .callout {
+            background: #FFF5F5;
+            border-left: 4px solid #EE0000;
+            padding: 1.25rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .callout p {
+            margin-bottom: 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        ul {
+            margin: 1rem 0 1.25rem 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.75;
+        }
+
+        a {
+            color: #CC0000;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #f8f8f8;
+            border-top: 1px solid #e0e0e0;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-attribution {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-banner h1 {
+                font-size: 1.75rem;
+            }
+
+            .header-banner .subtitle {
+                font-size: 1rem;
+            }
+
+            .meta-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            article {
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-banner">
+        <h1>MaaS Self-Service Subscriptions: From 3-Day Wait to 30-Second Access</h1>
+        <div class="subtitle">How RHOAI 3.4 eliminates the admin bottleneck for enterprise LLM access</div>
+    </header>
+
+    <div class="meta-card">
+        <div class="meta-row">
+            <div class="meta-item">
+                <span class="meta-label">Author:</span>
+                <span>Markell Rawls</span>
+            </div>
+            <div class="meta-item">
+                <span class="badge badge-draft">Draft</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Word Count:</span>
+                <span>~1,450</span>
+            </div>
+        </div>
+        <div class="meta-row">
+            <span class="meta-label">Tags:</span>
+            <div class="tags">
+                <span class="badge badge-maas">MaaS</span>
+                <span class="badge badge-platform">Platform/Scale</span>
+                <span class="badge badge-rhoai">RHOAI 3.4</span>
+            </div>
+        </div>
+        <div class="meta-row">
+            <span class="meta-label">Companion:</span>
+            <a href="../index.html" class="companion-link">Interactive Demo</a>
+        </div>
+    </div>
+
+    <article>
+        <h2>The Admin Bottleneck Problem</h2>
+        <p>
+            Picture this: You're running a platform team at an enterprise with 50 product teams, all building AI features. Every single one of them needs access to your Model-as-a-Service infrastructure. They file tickets. They wait. You manually provision credentials, set up quotas, configure access policies. Three days later, they get their API key.
+        </p>
+        <p>
+            Then another team files a ticket. And another. Your inbox becomes a queue of "Need LLM access" requests. You're not doing platform engineering anymore. You're a ticket-processing machine.
+        </p>
+        <p>
+            Worse, there's no standardization. Team A gets one set of quotas because you were feeling generous. Team B gets different limits because you copy-pasted from an old config. Team C is still waiting because their ticket got buried under a production incident. Every provisioning decision is manual. Every configuration is a snowflake.
+        </p>
+        <p>
+            This doesn't scale. You're not the enabler anymore. You're the bottleneck.
+        </p>
+
+        <h2>How MaaS Subscriptions Work</h2>
+        <p>
+            RHOAI 3.4's subscription model flips this completely. Instead of provisioning access per request, you design subscription tiers once, then let teams self-serve.
+        </p>
+        <p>
+            Here's the pattern: As an admin, you create subscription tiers like Free, Premium, and Enterprise. Each tier defines token quotas and access policies. Free might get 10,000 tokens per month. Premium gets 100,000. Enterprise gets 1 million. You map each subscription to an OpenShift group.
+        </p>
+        <p>
+            That last part is critical. Subscriptions aren't assigned to individual users. They're mapped to groups. Add a developer to the <code>premium-users</code> group, they instantly inherit Premium subscription access. Remove them from the group, access revoked. No tickets. No manual provisioning. Just standard OpenShift RBAC doing what it does best.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Key insight:</strong> Subscriptions map to OpenShift groups. Add a user to a group, they instantly get the right access level. Remove them, access revoked. No tickets needed. Your existing identity and access management becomes your MaaS governance layer.
+            </p>
+        </div>
+
+        <p>
+            You set this up once. After that, your job shifts from manual provisioning to governance. You're designing access patterns, not executing them.
+        </p>
+
+        <h2>Self-Service API Key Generation</h2>
+        <p>
+            From a developer's perspective, the experience is seamless. They log into the MaaS dashboard using their existing credentials. The system checks their OpenShift group membership, identifies their subscription tier, and displays it front and center.
+        </p>
+        <p>
+            They click "Generate API Key." Thirty seconds later, they have an OpenAI-compatible API key scoped to their subscription. No approval workflow. No waiting. No ticket status checks.
+        </p>
+        <p>
+            The key inherits all the governance policies from the subscription. Token quotas, model access, rate limits — all enforced automatically. The developer doesn't need to know the policy details. They just get a working key that respects the boundaries you defined.
+        </p>
+        <p>
+            Here's what using that key looks like:
+        </p>
+
+        <pre><code>from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-maas-premium-...",
+    base_url="https://maas.your-cluster.example.com/v1"
+)
+
+response = client.chat.completions.create(
+    model="granite-3.1-8b-instruct",
+    messages=[{"role": "user", "content": "Summarize this document..."}]
+)
+
+print(response.choices[0].message.content)</code></pre>
+
+        <p>
+            Standard OpenAI SDK. Standard model calling pattern. The only difference is the <code>base_url</code> pointing to your MaaS endpoint. Developers use tools they already know. No learning curve. No custom client libraries.
+        </p>
+
+        <h2>Token Quota Enforcement</h2>
+        <p>
+            Here's where the subscription model earns its keep: token quotas prevent runaway costs without blocking legitimate usage.
+        </p>
+        <p>
+            Each subscription tier has a monthly token limit. As teams approach that limit, they get warnings at predictable thresholds:
+        </p>
+        <ul>
+            <li><strong>80% usage:</strong> Informational notification. "You've used 80K of your 100K monthly tokens."</li>
+            <li><strong>95% usage:</strong> Urgent warning. "You're at 95% quota. Optimize your usage or request an upgrade."</li>
+            <li><strong>100% usage:</strong> Rate limited until the next billing cycle (or an admin override).</li>
+        </ul>
+        <p>
+            Teams get clear visibility into their consumption. They see exactly how many tokens they've burned and how many remain. No surprise bills. No "who used all our tokens?" investigations at the end of the month.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Token quotas aren't just about cost control.</strong> They force teams to be intentional about their AI usage. Optimizing prompts. Caching responses. Choosing the right model for the task. Quotas create healthy constraints that lead to better engineering.
+            </p>
+        </div>
+
+        <p>
+            When a team consistently hits their quota, it's a signal. Either they're growing and need a higher tier, or they're using the models inefficiently. Either way, you can have a data-driven conversation instead of reacting to an unexpected invoice.
+        </p>
+
+        <h2>Business Impact</h2>
+        <p>
+            Let's quantify what this transformation actually looks like in practice:
+        </p>
+        <ul>
+            <li><strong>50 teams provisioned in 1 hour</strong> instead of 1 week. You create the subscription tiers, map them to existing OpenShift groups, and you're done. Teams can immediately start generating keys.</li>
+            <li><strong>Admin time freed up for actual governance work.</strong> Instead of processing tickets, you're analyzing usage patterns, optimizing model deployments, and designing better access policies.</li>
+            <li><strong>Zero runaway cost incidents.</strong> Token quotas enforce hard limits. No team can accidentally burn through your entire model budget in a weekend experiment.</li>
+            <li><strong>Unified access control through OpenShift groups.</strong> You're not managing a separate identity system for MaaS. It integrates with the RBAC you already maintain.</li>
+        </ul>
+        <p>
+            This is what "governed AI consumption" actually looks like. It's not about restricting access. It's about enabling it responsibly. You're not the gatekeeper anymore. You're the architect of a system that lets teams move fast while staying within guardrails.
+        </p>
+        <p>
+            The old model scaled linearly with team count. Every new team added to your workload. The subscription model scales with configuration, not with usage. You design the tiers once. After that, onboarding 5 teams or 500 teams takes the same amount of admin effort: zero.
+        </p>
+
+        <h2>What This Means for Platform Teams</h2>
+        <p>
+            If you're running an AI platform, this changes your job description. You shift from operational execution to strategic design. Instead of "provision this key for Team X," your work becomes:
+        </p>
+        <ul>
+            <li>Designing subscription tiers that match your organization's usage patterns</li>
+            <li>Monitoring aggregate consumption to optimize model deployments</li>
+            <li>Identifying teams that need tier upgrades before they hit quota limits</li>
+            <li>Analyzing cost per team to inform capacity planning</li>
+        </ul>
+        <p>
+            You're not processing requests. You're building systems that process themselves.
+        </p>
+        <p>
+            And when something does need your attention, it's data-driven. The subscription system surfaces actionable insights: "Team Y consistently uses 98% of their quota." That's a conversation starter about upgrading their tier or optimizing their usage. "Team Z generated a key but never used it." That's an opportunity to check in and offer support.
+        </p>
+
+        <h2>Try It Yourself</h2>
+        <p>
+            This is part of the Platform/Scale content pillar, focused on making enterprise AI consumption actually work at scale. If you want to see the subscription flow in action, check out the <a href="../index.html">interactive demo</a>. It walks through the admin setup, the developer experience, and the quota enforcement in a visual format.
+        </p>
+        <p>
+            RHOAI 3.4's MaaS self-service subscriptions turn the admin bottleneck into a self-service pipeline. Three-day waits become thirty-second workflows. Manual provisioning becomes automated governance. And platform teams get their time back to do actual platform work.
+        </p>
+    </article>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Content Hub</a>
+            <a href="../index.html">Interactive Demo</a>
+        </div>
+        <div class="footer-attribution">
+            Markell Rawls | AI Developer Advocate, Red Hat
+        </div>
+    </footer>
+</body>
+</html>
