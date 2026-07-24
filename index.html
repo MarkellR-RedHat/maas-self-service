@@ -377,9 +377,9 @@
 
     .policy-items li:last-child { border-bottom: none; }
     .policy-value { font-weight: 500; }
-    .team-eng .policy-value { color: var(--red); }
-    .team-mktg .policy-value { color: #1a1a1a; }
-    .team-research .policy-value { color: #888888; }
+    .team-eng .policy-value { color: var(--text); }
+    .team-mktg .policy-value { color: var(--text); }
+    .team-research .policy-value { color: var(--text); }
     .policy-note { text-align: center; margin-top: 24px; font-size: 14px; color: var(--text); }
 
     /* Slide 3: Code snippet */
@@ -430,7 +430,7 @@
     .comparison-side { padding: 28px; position: relative; overflow: hidden; }
     .comparison-side::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; }
     .comparison-before::before { background: var(--coral); }
-    .comparison-after::before { background: var(--green); }
+    .comparison-after::before { background: #1a1a1a; }
     .comparison-side h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; margin-bottom: 20px; text-align: center; color: var(--text); }
     .comparison-item { padding: 12px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.06); font-size: 15px; color: var(--text); display: flex; align-items: flex-start; gap: 10px; }
     .comparison-item:last-child { border-bottom: none; }
@@ -559,7 +559,6 @@
               <div class="code-line">    <span class="code-var">messages</span><span class="code-op">=[{</span><span class="code-string">"role"</span><span class="code-op">:</span> <span class="code-string">"user"</span><span class="code-op">,</span> <span class="code-string">"content"</span><span class="code-op">:</span> <span class="code-string">"Summarize this quarter's pipeline data."</span><span class="code-op">}]</span></div>
               <div class="code-line"><span class="code-op">)</span></div>
               <div class="code-note">
-                <span class="code-note-icon">&#9432;</span>
                 <span>Standard OpenAI SDK. Same tools developers already know. Rate limited via HTTP 429 &mdash; agentic tools handle backoff natively.</span>
               </div>
             </div>
@@ -746,77 +745,91 @@
     }
     drawBgParticles();
 
-    // --- Globe (slide 1 only, adapted from AI Story globe.js) ---
+    // --- Particle Wave Mesh (slide 1 only) ---
     const globeCanvas = document.getElementById('globeCanvas');
     const gCtx = globeCanvas.getContext('2d');
-    const N = 760;
-    const RAD = 0.46;
     let gW, gH, gDpr = Math.min(2, window.devicePixelRatio || 1);
-    let gt = 0, globeRaf = null, globeRunning = true;
+    let gt = 0;
     let gmx = -1e4, gmy = -1e4;
 
-    const sph = [];
-    for (let i = 0; i < N; i++) {
-      const y = 1 - (i / (N - 1)) * 2;
-      const r = Math.sqrt(Math.max(0, 1 - y * y));
-      const th = i * 2.399963229;
-      sph.push({ x: Math.cos(th) * r, y, z: Math.sin(th) * r });
-    }
-
-    const GP = Array.from({ length: N }, (_, i) => ({ x: 0, y: 0, z: 1, seed: (i * 127.1) % 6.283 }));
-    let gPlaced = false;
-
-    const rotY = (p, a) => {
-      const c = Math.cos(a), s = Math.sin(a);
-      return { x: p.x * c + p.z * s, y: p.y, z: -p.x * s + p.z * c };
-    };
-
-    function gTarget(i, cx, cy, R) {
-      const p = rotY(sph[i], gt * 0.16);
-      return { x: cx + p.x * R, y: cy + p.y * R, z: p.z };
+    const COLS = 32, ROWS = 20;
+    const N = COLS * ROWS;
+    const meshPts = [];
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        meshPts.push({ gx: c, gy: r, x: 0, y: 0, ox: 0, oy: 0, seed: (r * COLS + c) * 1.618 % 6.283 });
+      }
     }
 
     function gResize() {
-      const r = globeCanvas.getBoundingClientRect();
-      gW = globeCanvas.width = Math.max(1, r.width * gDpr);
-      gH = globeCanvas.height = Math.max(1, r.height * gDpr);
-      if (!gPlaced) {
-        const cx = gW / 2, cy = gH / 2, R = Math.min(gW, gH) * RAD;
-        for (let i = 0; i < N; i++) { const tg = gTarget(i, cx, cy, R); GP[i].x = tg.x; GP[i].y = tg.y; }
-        gPlaced = true;
-      }
+      const rect = globeCanvas.getBoundingClientRect();
+      gW = globeCanvas.width = Math.max(1, rect.width * gDpr);
+      gH = globeCanvas.height = Math.max(1, rect.height * gDpr);
+      const padX = gW * 0.06, padY = gH * 0.08;
+      const spacingX = (gW - padX * 2) / (COLS - 1);
+      const spacingY = (gH - padY * 2) / (ROWS - 1);
+      meshPts.forEach(p => {
+        p.ox = padX + p.gx * spacingX;
+        p.oy = padY + p.gy * spacingY;
+        if (!p.placed) { p.x = p.ox; p.y = p.oy; p.placed = true; }
+      });
     }
 
     function gFrame() {
-      if (currentSlide !== 0) { globeRaf = requestAnimationFrame(gFrame); return; }
+      if (currentSlide !== 0) { requestAnimationFrame(gFrame); return; }
       gCtx.clearRect(0, 0, gW, gH);
-      const cx = gW / 2, cy = gH / 2, R = Math.min(gW, gH) * RAD;
-      const rep = 110 * gDpr, rep2 = rep * rep;
+      const rep = 90 * gDpr, rep2 = rep * rep;
 
-      for (let i = 0; i < N; i++) {
-        const p = GP[i];
-        const tg = gTarget(i, cx, cy, R);
-        p.x += (tg.x - p.x) * 0.15;
-        p.y += (tg.y - p.y) * 0.15;
-        p.z += (tg.z - p.z) * 0.17;
+      meshPts.forEach(p => {
+        const wave1 = Math.sin(gt * 1.2 + p.gx * 0.4 + p.gy * 0.3) * 8 * gDpr;
+        const wave2 = Math.cos(gt * 0.8 + p.gy * 0.5 - p.gx * 0.2) * 6 * gDpr;
+        const wave3 = Math.sin(gt * 0.5 + (p.gx + p.gy) * 0.25) * 4 * gDpr;
+        const tx = p.ox + wave2;
+        const ty = p.oy + wave1 + wave3;
+        p.x += (tx - p.x) * 0.12;
+        p.y += (ty - p.y) * 0.12;
 
         const dx = p.x - gmx, dy = p.y - gmy, dd = dx * dx + dy * dy;
-        if (dd < rep2) { const d = Math.sqrt(dd) || 1, f = (rep - d) / rep * 10 * gDpr; p.x += dx / d * f; p.y += dy / d * f; }
+        if (dd < rep2) { const d = Math.sqrt(dd) || 1, f = (rep - d) / rep * 14 * gDpr; p.x += dx / d * f; p.y += dy / d * f; }
+      });
 
-        const depth = 0.35 + 0.65 * Math.max(0, p.z);
-        const rr = (1.7 + 2.0 * depth) * gDpr;
-        const hue = 0 + Math.max(0, Math.min(1, p.x / gW + Math.sin(gt * 0.3 + p.seed) * 0.03)) * 25;
+      // connection lines
+      gCtx.lineWidth = 0.6 * gDpr;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const idx = r * COLS + c;
+          const p = meshPts[idx];
+          if (c < COLS - 1) {
+            const q = meshPts[idx + 1];
+            const d = Math.hypot(p.x - q.x, p.y - q.y);
+            const a = Math.max(0, 0.18 - d / (gW * 0.14));
+            if (a > 0) { gCtx.beginPath(); gCtx.moveTo(p.x, p.y); gCtx.lineTo(q.x, q.y); gCtx.strokeStyle = 'rgba(238,0,0,' + a + ')'; gCtx.stroke(); }
+          }
+          if (r < ROWS - 1) {
+            const q = meshPts[idx + COLS];
+            const d = Math.hypot(p.x - q.x, p.y - q.y);
+            const a = Math.max(0, 0.18 - d / (gH * 0.18));
+            if (a > 0) { gCtx.beginPath(); gCtx.moveTo(p.x, p.y); gCtx.lineTo(q.x, q.y); gCtx.strokeStyle = 'rgba(238,0,0,' + a + ')'; gCtx.stroke(); }
+          }
+        }
+      }
 
-        gCtx.shadowBlur = (4 + depth * 9) * gDpr;
-        gCtx.shadowColor = 'hsla(' + hue + ',88%,50%,0.55)';
+      // particles
+      meshPts.forEach(p => {
+        const waveDepth = 0.5 + 0.5 * Math.sin(gt + p.seed);
+        const rr = (1.6 + 1.8 * waveDepth) * gDpr;
+        const hue = Math.max(0, Math.min(25, (p.gx / COLS) * 25 + Math.sin(gt * 0.3 + p.seed) * 5));
+
+        gCtx.shadowBlur = (3 + waveDepth * 8) * gDpr;
+        gCtx.shadowColor = 'hsla(' + hue + ',88%,50%,0.5)';
         gCtx.beginPath();
         gCtx.arc(p.x, p.y, rr, 0, 7);
-        gCtx.fillStyle = 'hsla(' + hue + ',88%,48%,' + (0.4 + 0.55 * depth) + ')';
+        gCtx.fillStyle = 'hsla(' + hue + ',88%,48%,' + (0.45 + 0.5 * waveDepth) + ')';
         gCtx.fill();
-      }
+      });
       gCtx.shadowBlur = 0;
-      gt += 0.022;
-      globeRaf = requestAnimationFrame(gFrame);
+      gt += 0.018;
+      requestAnimationFrame(gFrame);
     }
 
     function gMove(e) { const r = globeCanvas.getBoundingClientRect(); gmx = (e.clientX - r.left) * gDpr; gmy = (e.clientY - r.top) * gDpr; }
