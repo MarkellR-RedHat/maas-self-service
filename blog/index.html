@@ -159,12 +159,36 @@
     }
 
     .figure-placeholder {
-      background: #f0f0f0;
-      border: 2px dashed #ccc;
+      background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+      border: 1px solid #e0e0e0;
       border-radius: 8px;
-      padding: 3rem 2rem;
-      color: #888;
-      font-size: 0.9rem;
+      padding: 2.5rem 2rem;
+      color: #999;
+      font-size: 0.88rem;
+      font-style: italic;
+      position: relative;
+      text-align: center;
+    }
+
+    .figure-placeholder::before {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 4px, #e8e8e8 4px, #e8e8e8 5px
+      );
+    }
+
+    .rh-logo {
+      position: fixed;
+      top: 24px;
+      right: 32px;
+      z-index: 101;
+      height: 36px;
     }
 
     .figure-caption {
@@ -237,6 +261,7 @@
   </style>
 </head>
 <body>
+  <img src="../redhat-logo.png" alt="Red Hat" class="rh-logo">
   <header class="header-banner">
     <h1>Models-as-a-Service: How to Run Your Own Private AI API</h1>
     <div class="subtitle">How your platform team becomes an internal AI provider with Red Hat OpenShift AI</div>
@@ -288,7 +313,7 @@
     <h3>Solving shadow AI</h3>
 
     <p>
-      Back in the day, before we had nice cloud application platforms, developers would stand up their own infrastructure and deploy their applications, a practice formally known as shadow IT. The same exists for AI applications and models: when developers can't easily get access to a model, they sign up for whatever public API they can access. The Stanford Digital Economy Lab's enterprise AI playbook of 51 case studies found that <strong>70 to 80% of employees using AI at work rely on tools not approved by their employer</strong>.
+      Back in the day, before we had nice cloud application platforms, developers would stand up their own infrastructure and deploy their applications, a practice formally known as shadow IT. The same exists for AI applications and models: when developers can't easily get access to a model, they sign up for whatever public API they can access. The <a href="https://hai.stanford.edu/research/ai-index-report">Stanford Digital Economy Lab's</a> enterprise AI playbook of 51 case studies found that <strong>70 to 80% of employees using AI at work rely on tools not approved by their employer</strong>.
     </p>
 
     <p>
