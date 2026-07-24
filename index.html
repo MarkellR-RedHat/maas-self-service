@@ -359,20 +359,11 @@
       border-radius: 16px 16px 0 0;
     }
 
-    .policy-card.team-eng::before { background: var(--blue); }
-    .policy-card.team-mktg::before { background: var(--amber); }
-    .policy-card.team-research::before { background: var(--purple); }
+    .policy-card.team-eng::before { background: var(--red); }
+    .policy-card.team-mktg::before { background: #1a1a1a; }
+    .policy-card.team-research::before { background: #888888; }
 
-    .policy-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-
-    .policy-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; font-size: 20px;
-    }
-
-    .team-eng .policy-icon { background: rgba(37, 99, 235, 0.1); }
-    .team-mktg .policy-icon { background: rgba(196, 122, 0, 0.1); }
-    .team-research .policy-icon { background: rgba(124, 58, 237, 0.1); }
+    .policy-card-header { margin-bottom: 20px; }
 
     .policy-card h3 { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--text); }
     .policy-items { list-style: none; }
@@ -386,9 +377,9 @@
 
     .policy-items li:last-child { border-bottom: none; }
     .policy-value { font-weight: 500; }
-    .team-eng .policy-value { color: var(--blue); }
-    .team-mktg .policy-value { color: var(--amber); }
-    .team-research .policy-value { color: var(--purple); }
+    .team-eng .policy-value { color: var(--red); }
+    .team-mktg .policy-value { color: #1a1a1a; }
+    .team-research .policy-value { color: #888888; }
     .policy-note { text-align: center; margin-top: 24px; font-size: 14px; color: var(--text); }
 
     /* Slide 3: Code snippet */
@@ -425,9 +416,9 @@
     .team-label { width: 100px; font-size: 14px; color: var(--text); flex-shrink: 0; }
     .team-bar-track { flex: 1; height: 24px; background: rgba(0, 0, 0, 0.04); border-radius: 4px; overflow: hidden; }
     .team-bar-fill { height: 100%; border-radius: 4px; width: 0; transition: width 2s ease; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 500; color: white; }
-    .team-bar-fill.eng { background: var(--blue); }
-    .team-bar-fill.mktg { background: var(--amber); }
-    .team-bar-fill.research { background: var(--purple); }
+    .team-bar-fill.eng { background: var(--red); }
+    .team-bar-fill.mktg { background: #1a1a1a; }
+    .team-bar-fill.research { background: #888888; }
     .team-tokens { width: 80px; text-align: right; font-family: var(--font-display); font-weight: 700; font-size: 14px; flex-shrink: 0; }
     .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .metric-box { text-align: center; padding: 16px; background: rgba(0, 0, 0, 0.03); border-radius: 10px; }
@@ -505,7 +496,6 @@
             <div class="policy-cards">
               <div class="policy-card glass team-eng anim anim-d3">
                 <div class="policy-card-header">
-                  <div class="policy-icon">&#128187;</div>
                   <h3>Engineering</h3>
                 </div>
                 <ul class="policy-items">
@@ -517,7 +507,6 @@
               </div>
               <div class="policy-card glass team-mktg anim anim-d4">
                 <div class="policy-card-header">
-                  <div class="policy-icon">&#128200;</div>
                   <h3>Marketing</h3>
                 </div>
                 <ul class="policy-items">
@@ -529,7 +518,6 @@
               </div>
               <div class="policy-card glass team-research anim anim-d5">
                 <div class="policy-card-header">
-                  <div class="policy-icon">&#128300;</div>
                   <h3>Research</h3>
                 </div>
                 <ul class="policy-items">
@@ -592,36 +580,36 @@
                 <div class="team-row">
                   <div class="team-label">Engineering</div>
                   <div class="team-bar-track"><div class="team-bar-fill eng" id="barEng"></div></div>
-                  <div class="team-tokens" style="color: var(--blue);" id="tokEng">0</div>
+                  <div class="team-tokens" style="color: var(--red);" id="tokEng">0</div>
                 </div>
                 <div class="team-row">
                   <div class="team-label">Marketing</div>
                   <div class="team-bar-track"><div class="team-bar-fill mktg" id="barMktg"></div></div>
-                  <div class="team-tokens" style="color: var(--amber);" id="tokMktg">0</div>
+                  <div class="team-tokens" style="color: #1a1a1a;" id="tokMktg">0</div>
                 </div>
                 <div class="team-row">
                   <div class="team-label">Research</div>
                   <div class="team-bar-track"><div class="team-bar-fill research" id="barResearch"></div></div>
-                  <div class="team-tokens" style="color: var(--purple);" id="tokResearch">0</div>
+                  <div class="team-tokens" style="color: #888888;" id="tokResearch">0</div>
                 </div>
               </div>
               <div class="usage-panel glass anim anim-d4">
                 <h3>Platform Overview</h3>
                 <div class="metric-grid">
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--green);" id="metricModels">0</div>
+                    <div class="metric-value" style="color: var(--red);" id="metricModels">0</div>
                     <div class="metric-label">Active Models</div>
                   </div>
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--blue);" id="metricTeams">0</div>
+                    <div class="metric-value" style="color: var(--red);" id="metricTeams">0</div>
                     <div class="metric-label">Teams Served</div>
                   </div>
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--amber);" id="metricUptime">0</div>
+                    <div class="metric-value" style="color: var(--red);" id="metricUptime">0</div>
                     <div class="metric-label">Uptime %</div>
                   </div>
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--coral);" id="metricGPU">0</div>
+                    <div class="metric-value" style="color: var(--red);" id="metricGPU">0</div>
                     <div class="metric-label">GPU Util %</div>
                   </div>
                 </div>
@@ -630,19 +618,19 @@
                 <h3>Cost Allocation</h3>
                 <div class="metric-grid">
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--blue);">58%</div>
+                    <div class="metric-value" style="color: var(--red);">58%</div>
                     <div class="metric-label">Engineering</div>
                   </div>
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--amber);">24%</div>
+                    <div class="metric-value" style="color: var(--red);">24%</div>
                     <div class="metric-label">Marketing</div>
                   </div>
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--purple);">18%</div>
+                    <div class="metric-value" style="color: var(--red);">18%</div>
                     <div class="metric-label">Research</div>
                   </div>
                   <div class="metric-box">
-                    <div class="metric-value" style="color: var(--green);">$0</div>
+                    <div class="metric-value" style="color: var(--red);">$0</div>
                     <div class="metric-label">Shadow Spend</div>
                   </div>
                 </div>
