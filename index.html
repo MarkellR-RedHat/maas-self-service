@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MaaS Self-Service | Platform & Scale Capability</title>
+  <title>MaaS: Centralize Inference, Kill Shadow IT | Platform & Scale</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;900&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f0f;
+      --bg: #0a0a0a;
       --card: #1a1a1a;
       --text: #ffffff;
       --text-secondary: #cccccc;
       --text-muted: #999999;
       --border: #3d3d3d;
+      --red: #ee0000;
+      --red-glow: rgba(238, 0, 0, 0.15);
       --amber: #d4910a;
       --amber-glow: rgba(212, 145, 10, 0.15);
       --coral: #e05a3a;
@@ -29,11 +31,7 @@
       --font-text: 'Red Hat Text', sans-serif;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
       overflow: hidden;
@@ -63,85 +61,28 @@
       animation-direction: alternate;
     }
 
-    .blob-1 {
-      width: 400px;
-      height: 400px;
-      background: #cc0000;
-      top: 10%;
-      left: 10%;
-      animation: float1 22s;
-    }
+    .blob-1 { width: 400px; height: 400px; background: #cc0000; top: 10%; left: 10%; animation: float1 22s; }
+    .blob-2 { width: 500px; height: 500px; background: #ee0033; bottom: 20%; right: 10%; animation: float2 26s; }
+    .blob-3 { width: 350px; height: 350px; background: #a30000; top: 50%; left: 50%; animation: float3 30s; }
+    .blob-4 { width: 450px; height: 450px; background: #d4002a; bottom: 10%; left: 20%; animation: float4 28s; }
 
-    .blob-2 {
-      width: 500px;
-      height: 500px;
-      background: #ee0033;
-      bottom: 20%;
-      right: 10%;
-      animation: float2 26s;
-    }
-
-    .blob-3 {
-      width: 350px;
-      height: 350px;
-      background: #a30000;
-      top: 50%;
-      left: 50%;
-      animation: float3 30s;
-    }
-
-    .blob-4 {
-      width: 450px;
-      height: 450px;
-      background: #d4002a;
-      bottom: 10%;
-      left: 20%;
-      animation: float4 28s;
-    }
-
-    @keyframes float1 {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(100px, 80px) scale(1.1); }
-    }
-
-    @keyframes float2 {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(-80px, -100px) scale(0.9); }
-    }
-
-    @keyframes float3 {
-      from { transform: translate(-50%, -50%) scale(1); }
-      to { transform: translate(calc(-50% + 60px), calc(-50% - 60px)) scale(1.15); }
-    }
-
-    @keyframes float4 {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(90px, -70px) scale(1.05); }
-    }
+    @keyframes float1 { from { transform: translate(0, 0) scale(1); } to { transform: translate(100px, 80px) scale(1.1); } }
+    @keyframes float2 { from { transform: translate(0, 0) scale(1); } to { transform: translate(-80px, -100px) scale(0.9); } }
+    @keyframes float3 { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(calc(-50% + 60px), calc(-50% - 60px)) scale(1.15); } }
+    @keyframes float4 { from { transform: translate(0, 0) scale(1); } to { transform: translate(90px, -70px) scale(1.05); } }
 
     .progress-bar {
       position: fixed;
       top: 0;
       left: 0;
       height: 4px;
-      background: linear-gradient(90deg, var(--amber), var(--coral), var(--blue), var(--green));
+      background: linear-gradient(90deg, var(--coral), var(--red), var(--amber), var(--green));
       transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 100;
     }
 
-    .slides-container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .slides-track {
-      display: flex;
-      height: 100%;
-      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .slides-container { position: relative; z-index: 1; width: 100%; height: 100%; overflow: hidden; }
+    .slides-track { display: flex; height: 100%; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
 
     .slide {
       flex: 0 0 100%;
@@ -152,10 +93,7 @@
       padding: 60px 60px 100px;
     }
 
-    .slide-inner {
-      max-width: 1200px;
-      width: 100%;
-    }
+    .slide-inner { max-width: 1200px; width: 100%; }
 
     .slide-number {
       font-family: var(--font-display);
@@ -187,9 +125,7 @@
       max-width: 700px;
     }
 
-    .slide-body {
-      margin-top: 40px;
-    }
+    .slide-body { margin-top: 40px; }
 
     .anim {
       opacity: 0;
@@ -197,11 +133,7 @@
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
-    .slide.active .anim {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
+    .slide.active .anim { opacity: 1; transform: translateY(0); }
     .slide.active .anim-d1 { transition-delay: 0.1s; }
     .slide.active .anim-d2 { transition-delay: 0.2s; }
     .slide.active .anim-d3 { transition-delay: 0.3s; }
@@ -211,175 +143,282 @@
     .slide.active .anim-d7 { transition-delay: 0.7s; }
     .slide.active .anim-d8 { transition-delay: 0.8s; }
 
-    .funnel-canvas {
+    /* Slide 1: Shadow AI canvas */
+    .shadow-canvas {
       width: 100%;
-      max-width: 800px;
-      height: 400px;
+      max-width: 900px;
+      height: 380px;
       margin: 0 auto;
+      display: block;
     }
 
-    .subscription-cards {
+    .stat-callout {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 15px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .stat-callout strong {
+      color: var(--coral);
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    /* Slide 2: Policy cards */
+    .policy-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       margin-top: 40px;
     }
 
-    .sub-card {
+    .policy-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 32px 24px;
-      text-align: center;
+      padding: 28px 24px;
       position: relative;
       overflow: hidden;
     }
 
-    .sub-card::before {
+    .policy-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 4px;
-      background: currentColor;
     }
 
-    .sub-card.tier-free { color: var(--green); }
-    .sub-card.tier-free::before { background: var(--green); }
+    .policy-card.team-eng::before { background: var(--blue); }
+    .policy-card.team-mktg::before { background: var(--amber); }
+    .policy-card.team-research::before { background: var(--purple); }
 
-    .sub-card.tier-premium { color: var(--blue); }
-    .sub-card.tier-premium::before { background: var(--blue); }
-
-    .sub-card.tier-enterprise { color: var(--purple); }
-    .sub-card.tier-enterprise::before { background: var(--purple); }
-
-    .sub-card h3 {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 24px;
+    .policy-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       margin-bottom: 20px;
-      color: var(--text);
     }
 
-    .quota-meter {
-      width: 120px;
-      height: 120px;
-      margin: 24px auto;
-      position: relative;
+    .policy-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
     }
 
-    .quota-meter svg {
-      transform: rotate(-90deg);
-    }
+    .team-eng .policy-icon { background: var(--blue-glow); }
+    .team-mktg .policy-icon { background: var(--amber-glow); }
+    .team-research .policy-icon { background: var(--purple-glow); }
 
-    .quota-meter .quota-bg {
-      stroke: var(--border);
-      fill: none;
-    }
-
-    .quota-meter .quota-fill {
-      stroke: currentColor;
-      fill: none;
-      stroke-dasharray: 283;
-      stroke-dashoffset: 283;
-      transition: stroke-dashoffset 2s ease;
-    }
-
-    .slide.active .quota-meter .quota-fill {
-      stroke-dashoffset: 0;
-    }
-
-    .quota-value {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    .policy-card h3 {
       font-family: var(--font-display);
       font-weight: 700;
       font-size: 20px;
+    }
+
+    .policy-items { list-style: none; }
+
+    .policy-items li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(61, 61, 61, 0.5);
+      font-size: 14px;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .policy-items li:last-child { border-bottom: none; }
+
+    .policy-value {
+      font-weight: 500;
       color: var(--text);
     }
 
-    .terminal-demo {
-      background: #0a0a0a;
+    .team-eng .policy-value { color: var(--blue); }
+    .team-mktg .policy-value { color: var(--amber); }
+    .team-research .policy-value { color: var(--purple); }
+
+    .policy-note {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Slide 3: Code snippet */
+    .code-demo {
+      background: #0d0d0d;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px;
+      border-radius: 12px;
+      padding: 28px;
       font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
       font-size: 14px;
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      overflow-x: auto;
     }
 
-    .terminal-line {
-      margin-bottom: 12px;
-      color: var(--text-secondary);
-    }
-
-    .terminal-prompt {
-      color: var(--green);
-    }
-
-    .terminal-key {
-      display: inline-block;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 4px 12px;
-      margin-top: 16px;
-      color: var(--amber);
-      font-size: 12px;
-      letter-spacing: 0.5px;
-    }
-
-    .usage-bar-container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .usage-bar {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 32px;
-      margin-bottom: 24px;
-    }
-
-    .usage-bar h3 {
-      font-family: var(--font-display);
-      font-weight: 700;
-      margin-bottom: 16px;
-      font-size: 18px;
-    }
-
-    .bar-track {
-      height: 32px;
-      background: var(--bg);
-      border-radius: 6px;
-      overflow: hidden;
-      position: relative;
-      margin-bottom: 12px;
-    }
-
-    .bar-fill {
-      height: 100%;
-      transition: width 3s ease, background-color 0.5s ease;
+    .code-header {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding-right: 12px;
-      font-weight: 500;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .code-dot-red { background: #ff5f56; }
+    .code-dot-yellow { background: #ffbd2e; }
+    .code-dot-green { background: #27c93f; }
+
+    .code-filename {
+      margin-left: 12px;
+      color: var(--text-muted);
       font-size: 13px;
     }
 
-    .usage-status {
+    .code-line { line-height: 1.7; white-space: pre; }
+    .code-comment { color: #6a9955; }
+    .code-keyword { color: #569cd6; }
+    .code-string { color: #ce9178; }
+    .code-func { color: #dcdcaa; }
+    .code-var { color: #9cdcfe; }
+    .code-op { color: #d4d4d4; }
+
+    .code-note {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-text);
       font-size: 14px;
-      font-weight: 500;
-      margin-top: 8px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
     }
 
+    .code-note-icon { color: var(--blue); flex-shrink: 0; }
+
+    /* Slide 4: Usage dashboard */
+    .usage-dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .usage-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .usage-panel.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .usage-panel h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: var(--text-secondary);
+    }
+
+    .team-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .team-row:last-child { margin-bottom: 0; }
+
+    .team-label {
+      width: 100px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .team-bar-track {
+      flex: 1;
+      height: 24px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .team-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0;
+      transition: width 2s ease;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--bg);
+    }
+
+    .team-bar-fill.eng { background: var(--blue); }
+    .team-bar-fill.mktg { background: var(--amber); }
+    .team-bar-fill.research { background: var(--purple); }
+
+    .team-tokens {
+      width: 80px;
+      text-align: right;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .metric-box {
+      text-align: center;
+      padding: 16px;
+      background: var(--bg);
+      border-radius: 8px;
+    }
+
+    .metric-value {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Slide 5: Before/After */
     .comparison {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -392,7 +431,7 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 28px 28px;
+      padding: 28px;
       position: relative;
       overflow: hidden;
     }
@@ -417,30 +456,52 @@
       text-align: center;
     }
 
-    .comparison-stat {
-      margin-bottom: 16px;
+    .comparison-item {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(61, 61, 61, 0.4);
+      font-size: 15px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
     }
 
-    .comparison-label {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .comparison-item:last-child { border-bottom: none; }
+
+    .comparison-icon {
+      flex-shrink: 0;
+      font-size: 16px;
+      margin-top: 1px;
     }
 
-    .comparison-value {
+    .distinction-box {
+      max-width: 900px;
+      margin: 28px auto 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .distinction-col h4 {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 32px;
+      font-size: 16px;
+      margin-bottom: 8px;
     }
 
-    .comparison-before .comparison-value { color: var(--coral); }
-    .comparison-after .comparison-value { color: var(--green); }
+    .distinction-col p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
 
     .footer {
       margin-top: 32px;
-      padding-top: 32px;
+      padding-top: 24px;
       border-top: 1px solid var(--border);
       text-align: center;
     }
@@ -449,25 +510,15 @@
       font-family: var(--font-display);
       font-weight: 700;
       font-size: 18px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .footer-title {
       color: var(--text-secondary);
-      margin-bottom: 16px;
+      font-size: 15px;
     }
 
-    .footer-links a {
-      color: var(--amber);
-      text-decoration: none;
-      margin: 0 12px;
-      font-weight: 500;
-    }
-
-    .footer-links a:hover {
-      text-decoration: underline;
-    }
-
+    /* Navigation */
     .nav {
       position: fixed;
       bottom: 40px;
@@ -497,33 +548,12 @@
       transition: all 0.3s ease;
     }
 
-    .nav-btn:hover {
-      background: var(--border);
-      transform: scale(1.05);
-    }
+    .nav-btn:hover { background: var(--border); transform: scale(1.05); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn:disabled:hover { background: var(--card); transform: scale(1); }
+    .nav-btn svg { width: 20px; height: 20px; stroke: var(--text); fill: none; stroke-width: 2; }
 
-    .nav-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    .nav-btn:disabled:hover {
-      background: var(--card);
-      transform: scale(1);
-    }
-
-    .nav-btn svg {
-      width: 20px;
-      height: 20px;
-      stroke: var(--text);
-      fill: none;
-      stroke-width: 2;
-    }
-
-    .nav-dots {
-      display: flex;
-      gap: 8px;
-    }
+    .nav-dots { display: flex; gap: 8px; }
 
     .nav-dot {
       width: 8px;
@@ -535,34 +565,19 @@
     }
 
     .nav-dot.active {
-      background: var(--amber);
+      background: var(--red);
       transform: scale(1.3);
     }
 
     @media (max-width: 768px) {
-      .slide {
-        padding: 60px 24px 100px;
-      }
-
-      .slide-title {
-        font-size: 36px;
-      }
-
-      .slide-subtitle {
-        font-size: 16px;
-      }
-
-      .subscription-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .comparison {
-        grid-template-columns: 1fr;
-      }
-
-      .nav {
-        bottom: 20px;
-      }
+      .slide { padding: 60px 24px 100px; }
+      .slide-title { font-size: 32px; }
+      .slide-subtitle { font-size: 16px; }
+      .policy-cards { grid-template-columns: 1fr; }
+      .comparison { grid-template-columns: 1fr; }
+      .usage-dashboard { grid-template-columns: 1fr; }
+      .distinction-box { grid-template-columns: 1fr; }
+      .nav { bottom: 20px; padding: 10px 16px; gap: 16px; }
     }
   </style>
 </head>
@@ -579,167 +594,249 @@
   <div class="slides-container">
     <div class="slides-track" id="slidesTrack">
 
-      <!-- Slide 1: The Bottleneck Problem -->
+      <!-- Slide 1: The Shadow AI Problem -->
       <div class="slide active">
         <div class="slide-inner">
           <div class="slide-number anim">01</div>
-          <h2 class="slide-title anim anim-d1">The Bottleneck Problem</h2>
-          <p class="slide-subtitle anim anim-d2">50 teams waiting for LLM access. One admin. No governance.</p>
+          <h2 class="slide-title anim anim-d1">The Shadow AI Problem</h2>
+          <p class="slide-subtitle anim anim-d2">When developers can't get model access, they find their own way.</p>
           <div class="slide-body">
-            <canvas class="funnel-canvas anim anim-d3" id="funnelCanvas"></canvas>
+            <canvas class="shadow-canvas anim anim-d3" id="shadowCanvas"></canvas>
+            <p class="stat-callout anim anim-d4">
+              <strong>70&ndash;80%</strong> of employees using AI at work rely on tools not approved by their employer
+              &mdash; Stanford Digital Economy Lab
+            </p>
           </div>
         </div>
       </div>
 
-      <!-- Slide 2: Enter MaaS -->
+      <!-- Slide 2: Centralize Inference with MaaS -->
       <div class="slide">
         <div class="slide-inner">
           <div class="slide-number anim">02</div>
-          <h2 class="slide-title anim anim-d1">Enter MaaS</h2>
-          <p class="slide-subtitle anim anim-d2">Subscription-based governance. Admin creates policies once.</p>
+          <h2 class="slide-title anim anim-d1">Centralize Inference with MaaS</h2>
+          <p class="slide-subtitle anim anim-d2">One endpoint. Admin-defined policies. Developers get instant access.</p>
           <div class="slide-body">
-            <div class="subscription-cards">
-              <div class="sub-card tier-free anim anim-d3">
-                <h3>Free</h3>
-                <div class="quota-meter">
-                  <svg width="120" height="120">
-                    <circle class="quota-bg" cx="60" cy="60" r="45" stroke-width="10"></circle>
-                    <circle class="quota-fill" cx="60" cy="60" r="45" stroke-width="10"></circle>
-                  </svg>
-                  <div class="quota-value">10K</div>
+            <div class="policy-cards">
+              <div class="policy-card team-eng anim anim-d3">
+                <div class="policy-card-header">
+                  <div class="policy-icon">&#128187;</div>
+                  <h3>Engineering</h3>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 14px;">tokens/month</p>
+                <ul class="policy-items">
+                  <li>Models <span class="policy-value">granite-3, llama-4</span></li>
+                  <li>Rate limit <span class="policy-value">500 req/min</span></li>
+                  <li>Token budget <span class="policy-value">5M / month</span></li>
+                  <li>Priority <span class="policy-value">High</span></li>
+                </ul>
               </div>
-
-              <div class="sub-card tier-premium anim anim-d4">
-                <h3>Premium</h3>
-                <div class="quota-meter">
-                  <svg width="120" height="120">
-                    <circle class="quota-bg" cx="60" cy="60" r="45" stroke-width="10"></circle>
-                    <circle class="quota-fill" cx="60" cy="60" r="45" stroke-width="10"></circle>
-                  </svg>
-                  <div class="quota-value">100K</div>
+              <div class="policy-card team-mktg anim anim-d4">
+                <div class="policy-card-header">
+                  <div class="policy-icon">&#128200;</div>
+                  <h3>Marketing</h3>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 14px;">tokens/month</p>
+                <ul class="policy-items">
+                  <li>Models <span class="policy-value">granite-3</span></li>
+                  <li>Rate limit <span class="policy-value">100 req/min</span></li>
+                  <li>Token budget <span class="policy-value">1M / month</span></li>
+                  <li>Priority <span class="policy-value">Standard</span></li>
+                </ul>
               </div>
-
-              <div class="sub-card tier-enterprise anim anim-d5">
-                <h3>Enterprise</h3>
-                <div class="quota-meter">
-                  <svg width="120" height="120">
-                    <circle class="quota-bg" cx="60" cy="60" r="45" stroke-width="10"></circle>
-                    <circle class="quota-fill" cx="60" cy="60" r="45" stroke-width="10"></circle>
-                  </svg>
-                  <div class="quota-value">1M</div>
+              <div class="policy-card team-research anim anim-d5">
+                <div class="policy-card-header">
+                  <div class="policy-icon">&#128300;</div>
+                  <h3>Research</h3>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 14px;">tokens/month</p>
+                <ul class="policy-items">
+                  <li>Models <span class="policy-value">llama-4, mistral-3</span></li>
+                  <li>Rate limit <span class="policy-value">200 req/min</span></li>
+                  <li>Token budget <span class="policy-value">10M / month</span></li>
+                  <li>Priority <span class="policy-value">High</span></li>
+                </ul>
               </div>
             </div>
+            <p class="policy-note anim anim-d6">Composable policy defined by admin &mdash; mapped to OpenShift groups. Not rigid product tiers.</p>
           </div>
         </div>
       </div>
 
-      <!-- Slide 3: Self-Service -->
+      <!-- Slide 3: Self-Service Access -->
       <div class="slide">
         <div class="slide-inner">
           <div class="slide-number anim">03</div>
-          <h2 class="slide-title anim anim-d1">Self-Service API Key Generation</h2>
-          <p class="slide-subtitle anim anim-d2">No admin bottleneck. Team members generate keys instantly.</p>
+          <h2 class="slide-title anim anim-d1">Self-Service Access</h2>
+          <p class="slide-subtitle anim anim-d2">OpenAI-compatible API key in seconds. No tickets. No CLI.</p>
           <div class="slide-body">
-            <div class="terminal-demo anim anim-d3">
-              <div class="terminal-line"><span class="terminal-prompt">$</span> <span id="terminalText1"></span></div>
-              <div class="terminal-line" id="terminalLine2" style="display: none;"><span style="color: var(--green);">✓</span> Authenticated as user@premium-team</div>
-              <div class="terminal-line" id="terminalLine3" style="display: none;"><span class="terminal-prompt">$</span> <span id="terminalText2"></span></div>
-              <div class="terminal-line" id="terminalLine4" style="display: none;"><span style="color: var(--green);">✓</span> API key generated</div>
-              <div id="terminalLine5" style="display: none;">
-                <span class="terminal-key" id="apiKeyText"></span>
+            <div class="code-demo anim anim-d3">
+              <div class="code-header">
+                <div class="code-dot code-dot-red"></div>
+                <div class="code-dot code-dot-yellow"></div>
+                <div class="code-dot code-dot-green"></div>
+                <span class="code-filename">app.py</span>
               </div>
-              <div class="terminal-line" id="terminalLine6" style="display: none; margin-top: 16px;"><span style="color: var(--blue);">ℹ</span> Scoped to Premium subscription (100K tokens/month)</div>
+              <div class="code-line"><span class="code-keyword">from</span> <span class="code-var">openai</span> <span class="code-keyword">import</span> <span class="code-var">OpenAI</span></div>
+              <div class="code-line">&nbsp;</div>
+              <div class="code-line"><span class="code-var">client</span> <span class="code-op">=</span> <span class="code-func">OpenAI</span><span class="code-op">(</span></div>
+              <div class="code-line">    <span class="code-var">base_url</span><span class="code-op">=</span><span class="code-string">"https://maas.your-cluster.com/v1"</span><span class="code-op">,</span></div>
+              <div class="code-line">    <span class="code-var">api_key</span><span class="code-op">=</span><span class="code-string">"sk-maas-eng-a8f3c9d2"</span></div>
+              <div class="code-line"><span class="code-op">)</span></div>
+              <div class="code-line">&nbsp;</div>
+              <div class="code-line"><span class="code-var">response</span> <span class="code-op">=</span> <span class="code-var">client</span><span class="code-op">.</span><span class="code-var">chat</span><span class="code-op">.</span><span class="code-var">completions</span><span class="code-op">.</span><span class="code-func">create</span><span class="code-op">(</span></div>
+              <div class="code-line">    <span class="code-var">model</span><span class="code-op">=</span><span class="code-string">"granite-3"</span><span class="code-op">,</span></div>
+              <div class="code-line">    <span class="code-var">messages</span><span class="code-op">=[{</span><span class="code-string">"role"</span><span class="code-op">:</span> <span class="code-string">"user"</span><span class="code-op">,</span> <span class="code-string">"content"</span><span class="code-op">:</span> <span class="code-string">"Summarize this quarter's pipeline data."</span><span class="code-op">}]</span></div>
+              <div class="code-line"><span class="code-op">)</span></div>
+              <div class="code-note">
+                <span class="code-note-icon">&#9432;</span>
+                <span>Standard OpenAI SDK. Same tools developers already know. Rate limited via HTTP 429 &mdash; agentic tools handle backoff natively.</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 4: Token Quota Enforcement -->
+      <!-- Slide 4: Cost Visibility -->
       <div class="slide">
         <div class="slide-inner">
           <div class="slide-number anim">04</div>
-          <h2 class="slide-title anim anim-d1">Token Quota Enforcement</h2>
-          <p class="slide-subtitle anim anim-d2">Real-time visibility. Automatic rate limiting. No surprises.</p>
+          <h2 class="slide-title anim anim-d1">GPU Cost Attribution</h2>
+          <p class="slide-subtitle anim anim-d2">Which team, which model, how many tokens, what cost.</p>
           <div class="slide-body">
-            <div class="usage-bar-container anim anim-d3">
-              <div class="usage-bar">
-                <h3>Premium Subscription Usage</h3>
-                <div class="bar-track">
-                  <div class="bar-fill" id="usageBar"></div>
+            <div class="usage-dashboard">
+              <div class="usage-panel full-width anim anim-d3">
+                <h3>Token Consumption by Team</h3>
+                <div class="team-row">
+                  <div class="team-label">Engineering</div>
+                  <div class="team-bar-track"><div class="team-bar-fill eng" id="barEng"></div></div>
+                  <div class="team-tokens" style="color: var(--blue);" id="tokEng">0</div>
                 </div>
-                <div class="usage-status" id="usageStatus"></div>
+                <div class="team-row">
+                  <div class="team-label">Marketing</div>
+                  <div class="team-bar-track"><div class="team-bar-fill mktg" id="barMktg"></div></div>
+                  <div class="team-tokens" style="color: var(--amber);" id="tokMktg">0</div>
+                </div>
+                <div class="team-row">
+                  <div class="team-label">Research</div>
+                  <div class="team-bar-track"><div class="team-bar-fill research" id="barResearch"></div></div>
+                  <div class="team-tokens" style="color: var(--purple);" id="tokResearch">0</div>
+                </div>
+              </div>
+              <div class="usage-panel anim anim-d4">
+                <h3>Platform Overview</h3>
+                <div class="metric-grid">
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--green);" id="metricModels">0</div>
+                    <div class="metric-label">Active Models</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--blue);" id="metricTeams">0</div>
+                    <div class="metric-label">Teams Served</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--amber);" id="metricUptime">0</div>
+                    <div class="metric-label">Uptime %</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--coral);" id="metricGPU">0</div>
+                    <div class="metric-label">GPU Util %</div>
+                  </div>
+                </div>
+              </div>
+              <div class="usage-panel anim anim-d5">
+                <h3>Cost Allocation</h3>
+                <div class="metric-grid">
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--blue);">58%</div>
+                    <div class="metric-label">Engineering</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--amber);">24%</div>
+                    <div class="metric-label">Marketing</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--purple);">18%</div>
+                    <div class="metric-label">Research</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-value" style="color: var(--green);">$0</div>
+                    <div class="metric-label">Shadow Spend</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Slide 5: Business Impact -->
+      <!-- Slide 5: Why Centralize -->
       <div class="slide">
         <div class="slide-inner">
           <div class="slide-number anim">05</div>
-          <h2 class="slide-title anim anim-d1">Business Impact</h2>
-          <p class="slide-subtitle anim anim-d2">From 3-day wait to 30-second self-service.</p>
+          <h2 class="slide-title anim anim-d1">Why Centralize</h2>
+          <p class="slide-subtitle anim anim-d2">Pooling GPU resources eliminates shadow AI and cuts infrastructure costs.</p>
           <div class="slide-body">
             <div class="comparison">
               <div class="comparison-side comparison-before anim anim-d3">
-                <h3>BEFORE</h3>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Avg Wait Time</div>
-                  <div class="comparison-value" data-count="3">0</div>
-                  <div style="color: var(--text-secondary); margin-top: 4px;">days</div>
+                <h3>WITHOUT MaaS</h3>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--coral);">&#10007;</span>
+                  <span>N teams &times; N shadow deployments</span>
                 </div>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Access Method</div>
-                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">Manual provisioning</div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--coral);">&#10007;</span>
+                  <span>Wasted GPUs sitting idle per team</span>
                 </div>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Cost Control</div>
-                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">No quotas</div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--coral);">&#10007;</span>
+                  <span>No visibility into AI spend</span>
                 </div>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Admin Tickets</div>
-                  <div class="comparison-value" data-count="50">0</div>
-                  <div style="color: var(--text-secondary); margin-top: 4px;">per week</div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--coral);">&#10007;</span>
+                  <span>Compliance risk from unmanaged models</span>
+                </div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--coral);">&#10007;</span>
+                  <span>Personal cloud accounts, unauthorized API keys</span>
                 </div>
               </div>
-
               <div class="comparison-side comparison-after anim anim-d4">
-                <h3>AFTER</h3>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Avg Wait Time</div>
-                  <div class="comparison-value" data-count="30">0</div>
-                  <div style="color: var(--text-secondary); margin-top: 4px;">seconds</div>
+                <h3>WITH MaaS</h3>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--green);">&#10003;</span>
+                  <span>1 centralized stack, all teams served</span>
                 </div>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Access Method</div>
-                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">Self-service</div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--green);">&#10003;</span>
+                  <span>Pooled GPUs &mdash; higher utilization, lower cost</span>
                 </div>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Cost Control</div>
-                  <div style="color: var(--text-secondary); font-size: 16px; margin-top: 8px;">Quota enforcement</div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--green);">&#10003;</span>
+                  <span>Full cost attribution by team and model</span>
                 </div>
-                <div class="comparison-stat">
-                  <div class="comparison-label">Admin Tickets</div>
-                  <div class="comparison-value" data-count="0">0</div>
-                  <div style="color: var(--text-secondary); margin-top: 4px;">per week</div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--green);">&#10003;</span>
+                  <span>Governed access with admin-defined policy</span>
+                </div>
+                <div class="comparison-item">
+                  <span class="comparison-icon" style="color: var(--green);">&#10003;</span>
+                  <span>Zero shadow AI &mdash; no reason to go rogue</span>
                 </div>
               </div>
             </div>
 
-            <div class="footer anim anim-d5">
+            <div class="distinction-box anim anim-d5">
+              <div class="distinction-col">
+                <h4 style="color: var(--blue);">MaaS</h4>
+                <p>Pre-deployed model endpoints for app developers. OpenAI-compatible API. Self-service keys. Governed access.</p>
+              </div>
+              <div class="distinction-col">
+                <h4 style="color: var(--purple);">GPUaaS</h4>
+                <p>Raw GPU hardware for data scientists. Training, fine-tuning, synthetic data generation. Direct hardware allocation.</p>
+              </div>
+            </div>
+
+            <div class="footer anim anim-d6">
               <div class="footer-name">Markell Rawls</div>
               <div class="footer-title">AI Developer Advocate, Red Hat</div>
-              <div class="footer-links">
-                <a href="#">GitHub</a>
-                <a href="#">Content Hub</a>
-              </div>
             </div>
           </div>
         </div>
@@ -749,11 +846,11 @@
   </div>
 
   <div class="nav">
-    <button class="nav-btn" id="prevBtn">
+    <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
     </button>
     <div class="nav-dots" id="navDots"></div>
-    <button class="nav-btn" id="nextBtn">
+    <button class="nav-btn" id="nextBtn" aria-label="Next slide">
       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </button>
   </div>
@@ -768,7 +865,6 @@
     const nextBtn = document.getElementById('nextBtn');
     const navDots = document.getElementById('navDots');
 
-    // Create navigation dots
     for (let i = 0; i < totalSlides; i++) {
       const dot = document.createElement('div');
       dot.className = 'nav-dot';
@@ -781,247 +877,157 @@
       slidesTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
       progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
 
-      slides.forEach((slide, index) => {
-        slide.classList.toggle('active', index === currentSlide);
-      });
-
-      document.querySelectorAll('.nav-dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-      });
+      slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+      document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
 
       prevBtn.disabled = currentSlide === 0;
       nextBtn.disabled = currentSlide === totalSlides - 1;
 
-      // Trigger slide-specific animations
-      if (currentSlide === 0) {
-        animateFunnel();
-      } else if (currentSlide === 2) {
-        animateTerminal();
-      } else if (currentSlide === 3) {
-        animateUsageBar();
-      } else if (currentSlide === 4) {
-        animateCounters();
-      }
+      if (currentSlide === 0) animateShadow();
+      if (currentSlide === 3) animateDashboard();
     }
 
-    function goToSlide(index) {
-      currentSlide = index;
-      updateSlide();
-    }
-
-    function nextSlide() {
-      if (currentSlide < totalSlides - 1) {
-        currentSlide++;
-        updateSlide();
-      }
-    }
-
-    function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updateSlide();
-      }
-    }
+    function goToSlide(i) { currentSlide = i; updateSlide(); }
+    function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateSlide(); } }
+    function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
 
     prevBtn.addEventListener('click', prevSlide);
     nextBtn.addEventListener('click', nextSlide);
 
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        nextSlide();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        prevSlide();
-      }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
     });
 
-    // Slide 1: Funnel animation
-    function animateFunnel() {
-      const canvas = document.getElementById('funnelCanvas');
+    // Slide 1: Shadow AI sprawl animation
+    let shadowAnimId = null;
+    function animateShadow() {
+      const canvas = document.getElementById('shadowCanvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      canvas.width = canvas.offsetWidth * (window.devicePixelRatio || 1);
+      canvas.height = canvas.offsetHeight * (window.devicePixelRatio || 1);
+      ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
 
-      const teams = [];
-      const queueX = 100;
-      const funnelX = canvas.width / 2;
-      const exitX = canvas.width - 100;
+      if (shadowAnimId) cancelAnimationFrame(shadowAnimId);
 
-      for (let i = 0; i < 50; i++) {
-        teams.push({
-          x: queueX + Math.random() * 150,
-          y: Math.random() * canvas.height,
-          speed: 0.3 + Math.random() * 0.5,
-          state: 'queued'
+      const labels = [
+        { text: 'Personal AWS', x: w * 0.12, y: h * 0.25 },
+        { text: 'Claude Credits', x: w * 0.75, y: h * 0.18 },
+        { text: 'HuggingFace DL', x: w * 0.15, y: h * 0.72 },
+        { text: 'ChatGPT Plus', x: w * 0.82, y: h * 0.65 },
+        { text: 'Dept. Desktop', x: w * 0.45, y: h * 0.85 },
+        { text: 'Vendor API', x: w * 0.55, y: h * 0.12 },
+      ];
+
+      const particles = [];
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: (Math.random() - 0.5) * 1.2,
+          r: 3 + Math.random() * 3,
+          alpha: 0.3 + Math.random() * 0.5,
         });
       }
 
-      function drawFunnel() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
 
-        // Draw funnel
-        ctx.fillStyle = 'rgba(224, 90, 58, 0.2)';
-        ctx.strokeStyle = '#e05a3a';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(funnelX - 150, 0);
-        ctx.lineTo(funnelX - 20, canvas.height / 2 - 40);
-        ctx.lineTo(funnelX - 20, canvas.height / 2 + 40);
-        ctx.lineTo(funnelX - 150, canvas.height);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Draw bottleneck
-        ctx.fillStyle = 'rgba(224, 90, 58, 0.4)';
-        ctx.fillRect(funnelX - 22, canvas.height / 2 - 40, 4, 80);
-
-        // Draw teams
-        teams.forEach(team => {
-          if (team.state === 'queued') {
-            team.x += team.speed;
-            if (team.x > funnelX - 100) {
-              team.y += (canvas.height / 2 - team.y) * 0.02;
-            }
-            if (team.x > funnelX - 30 && Math.abs(team.y - canvas.height / 2) < 50) {
-              if (Math.random() < 0.01) {
-                team.state = 'passing';
-              }
-            }
-          } else if (team.state === 'passing') {
-            team.x += team.speed * 2;
-            if (team.x > exitX) {
-              team.x = queueX + Math.random() * 150;
-              team.y = Math.random() * canvas.height;
-              team.state = 'queued';
-            }
-          }
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
 
           ctx.beginPath();
-          ctx.arc(team.x, team.y, 4, 0, Math.PI * 2);
-          ctx.fillStyle = team.state === 'queued' ? '#e05a3a' : '#2e8b57';
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(224, 90, 58, ${p.alpha})`;
           ctx.fill();
         });
 
-        requestAnimationFrame(drawFunnel);
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 80) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(224, 90, 58, ${0.08 * (1 - dist / 80)})`;
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
+          }
+        }
+
+        labels.forEach(l => {
+          ctx.font = '500 13px "Red Hat Text", sans-serif';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+          ctx.textAlign = 'center';
+          ctx.fillText(l.text, l.x, l.y);
+
+          ctx.beginPath();
+          ctx.arc(l.x, l.y + 14, 6, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(238, 0, 0, 0.5)';
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(l.x, l.y + 14, 10, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(238, 0, 0, 0.2)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        });
+
+        ctx.font = '700 14px "Red Hat Display", sans-serif';
+        ctx.fillStyle = 'rgba(224, 90, 58, 0.7)';
+        ctx.textAlign = 'center';
+        ctx.fillText('No governance. No visibility. No cost control.', w / 2, h - 20);
+
+        shadowAnimId = requestAnimationFrame(draw);
       }
 
-      drawFunnel();
+      draw();
     }
 
-    // Slide 3: Terminal animation
-    let terminalAnimated = false;
-    function animateTerminal() {
-      if (terminalAnimated) return;
-      terminalAnimated = true;
-
-      const text1 = 'maas-cli login';
-      const text2 = 'maas-cli generate-key';
-      const apiKey = 'sk-maas-premium-a8f3c9d2e1b4';
-
-      let i = 0;
-      const type1 = setInterval(() => {
-        document.getElementById('terminalText1').textContent = text1.substring(0, i);
-        i++;
-        if (i > text1.length) {
-          clearInterval(type1);
-          setTimeout(() => {
-            document.getElementById('terminalLine2').style.display = 'block';
-            setTimeout(() => {
-              document.getElementById('terminalLine3').style.display = 'block';
-              let j = 0;
-              const type2 = setInterval(() => {
-                document.getElementById('terminalText2').textContent = text2.substring(0, j);
-                j++;
-                if (j > text2.length) {
-                  clearInterval(type2);
-                  setTimeout(() => {
-                    document.getElementById('terminalLine4').style.display = 'block';
-                    setTimeout(() => {
-                      document.getElementById('terminalLine5').style.display = 'block';
-                      let k = 0;
-                      const type3 = setInterval(() => {
-                        document.getElementById('apiKeyText').textContent = apiKey.substring(0, k);
-                        k++;
-                        if (k > apiKey.length) {
-                          clearInterval(type3);
-                          setTimeout(() => {
-                            document.getElementById('terminalLine6').style.display = 'block';
-                          }, 300);
-                        }
-                      }, 50);
-                    }, 400);
-                  }, 600);
-                }
-              }, 60);
-            }, 400);
-          }, 600);
-        }
-      }, 60);
-    }
-
-    // Slide 4: Usage bar animation
-    let usageAnimated = false;
-    function animateUsageBar() {
-      if (usageAnimated) return;
-      usageAnimated = true;
-
-      const bar = document.getElementById('usageBar');
-      const status = document.getElementById('usageStatus');
+    // Slide 4: Dashboard animation
+    let dashboardAnimated = false;
+    function animateDashboard() {
+      if (dashboardAnimated) return;
+      dashboardAnimated = true;
 
       setTimeout(() => {
-        bar.style.width = '95%';
-        bar.style.backgroundColor = '#d4910a';
-        bar.textContent = '95K / 100K';
-        status.textContent = '⚠ WARNING: 95% quota used';
-        status.style.color = '#d4910a';
-      }, 500);
+        document.getElementById('barEng').style.width = '58%';
+        document.getElementById('barMktg').style.width = '24%';
+        document.getElementById('barResearch').style.width = '18%';
 
-      setTimeout(() => {
-        bar.style.width = '100%';
-        bar.style.backgroundColor = '#e05a3a';
-        bar.textContent = '100K / 100K';
-        status.textContent = '⛔ RATE LIMITED';
-        status.style.color = '#e05a3a';
-      }, 3500);
-
-      setTimeout(() => {
-        bar.style.width = '0%';
-        bar.textContent = '';
-        status.textContent = '';
-        usageAnimated = false;
-        if (currentSlide === 3) {
-          animateUsageBar();
-        }
-      }, 6000);
+        animateCounter('tokEng', 0, 2900000, 2000, v => (v / 1000000).toFixed(1) + 'M');
+        animateCounter('tokMktg', 0, 1200000, 2000, v => (v / 1000000).toFixed(1) + 'M');
+        animateCounter('tokResearch', 0, 900000, 2000, v => (v / 1000).toFixed(0) + 'K');
+        animateCounter('metricModels', 0, 4, 1500);
+        animateCounter('metricTeams', 0, 12, 1500);
+        animateCounter('metricUptime', 0, 99.9, 2000, v => v.toFixed(1));
+        animateCounter('metricGPU', 0, 78, 2000);
+      }, 400);
     }
 
-    // Slide 5: Counter animation
-    let countersAnimated = false;
-    function animateCounters() {
-      if (countersAnimated) return;
-      countersAnimated = true;
-
-      const counters = document.querySelectorAll('.comparison-value[data-count]');
-      counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-count'));
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
-
-        const interval = setInterval(() => {
-          current += step;
-          if (current >= target) {
-            counter.textContent = target;
-            clearInterval(interval);
-          } else {
-            counter.textContent = Math.floor(current);
-          }
-        }, 16);
-      });
+    function animateCounter(id, start, end, duration, fmt) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const startTime = performance.now();
+      function step(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const val = start + (end - start) * eased;
+        el.textContent = fmt ? fmt(val) : Math.round(val);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
     }
 
-    // Initialize
     updateSlide();
   </script>
 </body>

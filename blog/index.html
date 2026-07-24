@@ -1,422 +1,509 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaaS Self-Service Subscriptions: From 3-Day Wait to 30-Second Access</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;900&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Models-as-a-Service: How to Run Your Own Private AI API | Red Hat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;900&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Red Hat Text', sans-serif;
-            color: #1a1a1a;
-            background: #ffffff;
-            line-height: 1.6;
-        }
+    body {
+      font-family: 'Red Hat Text', sans-serif;
+      color: #1a1a1a;
+      background: #ffffff;
+      line-height: 1.7;
+    }
 
-        h1, h2, h3, h4 {
-            font-family: 'Red Hat Display', sans-serif;
-        }
+    h1, h2, h3, h4 { font-family: 'Red Hat Display', sans-serif; }
 
-        .header-banner {
-            background: linear-gradient(135deg, #CC0000 0%, #EE0000 100%);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-        }
+    .header-banner {
+      background: linear-gradient(135deg, #CC0000 0%, #EE0000 100%);
+      color: white;
+      padding: 3.5rem 2rem;
+      text-align: center;
+    }
 
-        .header-banner h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
+    .header-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        .header-banner .subtitle {
-            font-size: 1.25rem;
-            font-weight: 400;
-            opacity: 0.95;
-            max-width: 860px;
-            margin: 0 auto;
-        }
+    .header-banner .subtitle {
+      font-size: 1.2rem;
+      font-weight: 400;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
-        .meta-card {
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 1.25rem;
-            margin: 1.5rem auto;
-            max-width: 860px;
-        }
+    .meta-bar {
+      background: #f8f8f8;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 1rem 2rem;
+    }
 
-        .meta-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
+    .meta-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+    }
 
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+    .meta-item {
+      font-size: 0.9rem;
+      color: #666;
+    }
 
-        .meta-label {
-            font-weight: 500;
-            color: #666;
-        }
+    .meta-item strong { color: #1a1a1a; }
 
-        .badge {
-            border-radius: 999px;
-            padding: 4px 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
 
-        .badge-draft {
-            background: rgba(212, 145, 10, 0.15);
-            color: #d4910a;
-        }
+    .badge-maas { background: rgba(58, 123, 213, 0.12); color: #3a7bd5; }
+    .badge-rhoai { background: rgba(46, 139, 87, 0.12); color: #2e8b57; }
 
-        .badge-maas {
-            background: rgba(58, 123, 213, 0.15);
-            color: #3a7bd5;
-        }
+    article {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+    }
 
-        .badge-platform {
-            background: rgba(123, 94, 167, 0.15);
-            color: #7b5ea7;
-        }
+    h2 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      border-bottom: 3px solid #EE0000;
+      padding-bottom: 0.5rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
 
-        .badge-rhoai {
-            background: rgba(46, 139, 87, 0.15);
-            color: #2e8b57;
-        }
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #333;
+    }
 
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
+    p {
+      margin-bottom: 1.25rem;
+      line-height: 1.75;
+    }
 
-        .companion-link {
-            color: #CC0000;
-            text-decoration: none;
-            font-weight: 500;
-        }
+    .lead {
+      font-size: 1.15rem;
+      color: #333;
+      line-height: 1.8;
+    }
 
-        .companion-link:hover {
-            text-decoration: underline;
-        }
+    .callout {
+      background: #FFF5F5;
+      border-left: 4px solid #EE0000;
+      padding: 1.25rem;
+      border-radius: 4px;
+      margin: 1.5rem 0;
+    }
 
-        article {
-            max-width: 860px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    .callout p { margin-bottom: 0; }
 
-        h2 {
-            font-size: 1.75rem;
-            border-bottom: 3px solid #EE0000;
-            padding-bottom: 0.5rem;
-            margin-top: 2.5rem;
-            margin-bottom: 1.25rem;
-            font-weight: 700;
-        }
+    .callout-blue {
+      background: #f0f6ff;
+      border-left-color: #3a7bd5;
+    }
 
-        p {
-            line-height: 1.75;
-            margin-bottom: 1.25rem;
-        }
+    .callout-green {
+      background: #f0faf5;
+      border-left-color: #2e8b57;
+    }
 
-        .callout {
-            background: #FFF5F5;
-            border-left: 4px solid #EE0000;
-            padding: 1.25rem;
-            border-radius: 4px;
-            margin: 1.5rem 0;
-        }
+    ul, ol { margin: 1rem 0 1.25rem 2rem; }
+    li { margin-bottom: 0.5rem; line-height: 1.75; }
 
-        .callout p {
-            margin-bottom: 0;
-        }
+    code {
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
 
-        code {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            background: #f4f4f4;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.9em;
-        }
+    pre {
+      background: #1a1a1a;
+      color: #e0e0e0;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
 
-        pre {
-            background: #1a1a1a;
-            color: #e0e0e0;
-            padding: 1.25rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 1.5rem 0;
-        }
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
 
-        pre code {
-            background: none;
-            padding: 0;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
+    .figure {
+      margin: 2rem 0;
+      text-align: center;
+    }
 
-        ul {
-            margin: 1rem 0 1.25rem 2rem;
-        }
+    .figure-placeholder {
+      background: #f0f0f0;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 3rem 2rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
 
-        li {
-            margin-bottom: 0.5rem;
-            line-height: 1.75;
-        }
+    .figure-caption {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
 
-        a {
-            color: #CC0000;
-            text-decoration: none;
-        }
+    a { color: #CC0000; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-        a:hover {
-            text-decoration: underline;
-        }
+    .distinction-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
 
-        footer {
-            background: #f8f8f8;
-            border-top: 1px solid #e0e0e0;
-            padding: 2rem;
-            margin-top: 3rem;
-            text-align: center;
-        }
+    .distinction-card {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
+    .distinction-card h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
 
-        .footer-attribution {
-            color: #666;
-            font-size: 0.9rem;
-        }
+    .distinction-card p {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 0;
+    }
 
-        @media (max-width: 768px) {
-            .header-banner h1 {
-                font-size: 1.75rem;
-            }
+    .architecture-stack {
+      margin: 1.5rem 0;
+    }
 
-            .header-banner .subtitle {
-                font-size: 1rem;
-            }
+    .stack-layer {
+      padding: 1rem 1.25rem;
+      border-left: 4px solid;
+      margin-bottom: 1rem;
+      background: #f8f8f8;
+      border-radius: 0 8px 8px 0;
+    }
 
-            .meta-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-            }
+    .stack-layer h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
 
-            article {
-                padding: 1.5rem;
-            }
+    .stack-layer p {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 0;
+    }
 
-            h2 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    .stack-layer:nth-child(1) { border-left-color: #CC0000; }
+    .stack-layer:nth-child(2) { border-left-color: #3a7bd5; }
+    .stack-layer:nth-child(3) { border-left-color: #2e8b57; }
+    .stack-layer:nth-child(4) { border-left-color: #d4910a; }
+    .stack-layer:nth-child(5) { border-left-color: #7b5ea7; }
+
+    footer {
+      background: #f8f8f8;
+      border-top: 1px solid #e0e0e0;
+      padding: 2rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-attribution {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .header-banner h1 { font-size: 1.75rem; }
+      .header-banner .subtitle { font-size: 1rem; }
+      article { padding: 1.5rem; }
+      h2 { font-size: 1.4rem; }
+      .distinction-box { grid-template-columns: 1fr; }
+      .meta-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+  </style>
 </head>
 <body>
-    <header class="header-banner">
-        <h1>MaaS Self-Service Subscriptions: From 3-Day Wait to 30-Second Access</h1>
-        <div class="subtitle">How RHOAI 3.4 eliminates the admin bottleneck for enterprise LLM access</div>
-    </header>
+  <header class="header-banner">
+    <h1>Models-as-a-Service: How to Run Your Own Private AI API</h1>
+    <div class="subtitle">How your platform team becomes an internal AI provider with Red Hat OpenShift AI</div>
+  </header>
 
-    <div class="meta-card">
-        <div class="meta-row">
-            <div class="meta-item">
-                <span class="meta-label">Author:</span>
-                <span>Markell Rawls</span>
-            </div>
-            <div class="meta-item">
-                <span class="badge badge-draft">Draft</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-label">Word Count:</span>
-                <span>~1,450</span>
-            </div>
-        </div>
-        <div class="meta-row">
-            <span class="meta-label">Tags:</span>
-            <div class="tags">
-                <span class="badge badge-maas">MaaS</span>
-                <span class="badge badge-platform">Platform/Scale</span>
-                <span class="badge badge-rhoai">RHOAI 3.4</span>
-            </div>
-        </div>
-        <div class="meta-row">
-            <span class="meta-label">Companion:</span>
-            <a href="../index.html" class="companion-link">Interactive Demo</a>
-        </div>
+  <div class="meta-bar">
+    <div class="meta-inner">
+      <div class="meta-item"><strong>By:</strong> Markell Rawls</div>
+      <div class="meta-item"><span class="badge badge-maas">MaaS</span></div>
+      <div class="meta-item"><span class="badge badge-rhoai">RHOAI 3.4+</span></div>
+      <div class="meta-item"><strong>Companion:</strong> <a href="../index.html">Interactive Overview</a></div>
+    </div>
+  </div>
+
+  <article>
+    <p class="lead">
+      I've been building with generative AI for a while now, starting with the early coding-assistant autocomplete days, then GPT, and now agents. But the question I keep getting from platform teams isn't <em>which model to choose</em>. It's a much harder one: <strong>How do we let every developer in the company use AI, without losing control of costs, security, and the models we're actually depending on?</strong>
+    </p>
+
+    <p>
+      That's the problem Model-as-a-Service (MaaS) solves. As of Red Hat OpenShift AI 3.4, it's a generally available, production-ready capability on OpenShift.
+    </p>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 1: How an organization becomes its own internal AI provider with Model-as-a-Service. Consumer business applications and development environments connect through an API gateway to available models and GPU utilization.</div>
     </div>
 
-    <article>
-        <h2>The Admin Bottleneck Problem</h2>
-        <p>
-            Picture this: You're running a platform team at an enterprise with 50 product teams, all building AI features. Every single one of them needs access to your Model-as-a-Service infrastructure. They file tickets. They wait. You manually provision credentials, set up quotas, configure access policies. Three days later, they get their API key.
-        </p>
-        <p>
-            Then another team files a ticket. And another. Your inbox becomes a queue of "Need LLM access" requests. You're not doing platform engineering anymore. You're a ticket-processing machine.
-        </p>
-        <p>
-            Worse, there's no standardization. Team A gets one set of quotas because you were feeling generous. Team B gets different limits because you copy-pasted from an old config. Team C is still waiting because their ticket got buried under a production incident. Every provisioning decision is manual. Every configuration is a snowflake.
-        </p>
-        <p>
-            This doesn't scale. You're not the enabler anymore. You're the bottleneck.
-        </p>
+    <h2>What is Model-as-a-Service?</h2>
 
-        <h2>How MaaS Subscriptions Work</h2>
-        <p>
-            RHOAI 3.4's subscription model flips this completely. Instead of provisioning access per request, you design subscription tiers once, then let teams self-serve.
-        </p>
-        <p>
-            Here's the pattern: As an admin, you create subscription tiers like Free, Premium, and Enterprise. Each tier defines token quotas and access policies. Free might get 10,000 tokens per month. Premium gets 100,000. Enterprise gets 1 million. You map each subscription to an OpenShift group.
-        </p>
-        <p>
-            That last part is critical. Subscriptions aren't assigned to individual users. They're mapped to groups. Add a developer to the <code>premium-users</code> group, they instantly inherit Premium subscription access. Remove them from the group, access revoked. No tickets. No manual provisioning. Just standard OpenShift RBAC doing what it does best.
-        </p>
+    <p>
+      Think about how you already use AI today. You're not renting GPUs from OpenAI or Anthropic; instead, you connect to their API endpoints. Their team handles the hardware, serving, autoscaling, and rate limits. You send a request and receive tokens back. Model-as-a-Service applies that same concept, but instead of being a token consumer, <strong>you become a token provider</strong>.
+    </p>
 
-        <div class="callout">
-            <p>
-                <strong>Key insight:</strong> Subscriptions map to OpenShift groups. Add a user to a group, they instantly get the right access level. Remove them, access revoked. No tickets needed. Your existing identity and access management becomes your MaaS governance layer.
-            </p>
-        </div>
+    <p>
+      It's an approach to delivering AI models as shared resources inside your organization through standardized API endpoints. Just as you'd use SaaS for ticketing, identity, or storage, your platform team operates an internal MaaS so developers can build with AI without each team having to stand up its own inference stack. This architecture provides:
+    </p>
 
-        <p>
-            You set this up once. After that, your job shifts from manual provisioning to governance. You're designing access patterns, not executing them.
-        </p>
+    <ul>
+      <li>A small number of curated, governed model endpoints</li>
+      <li>API keys, rate limits, and usage tracking per team</li>
+      <li>One observability stack for every AI workload in the company</li>
+      <li>Full control over the underlying models, data paths, and infrastructure</li>
+    </ul>
 
-        <h2>Self-Service API Key Generation</h2>
-        <p>
-            From a developer's perspective, the experience is seamless. They log into the MaaS dashboard using their existing credentials. The system checks their OpenShift group membership, identifies their subscription tier, and displays it front and center.
-        </p>
-        <p>
-            They click "Generate API Key." Thirty seconds later, they have an OpenAI-compatible API key scoped to their subscription. No approval workflow. No waiting. No ticket status checks.
-        </p>
-        <p>
-            The key inherits all the governance policies from the subscription. Token quotas, model access, rate limits — all enforced automatically. The developer doesn't need to know the policy details. They just get a working key that respects the boundaries you defined.
-        </p>
-        <p>
-            Here's what using that key looks like:
-        </p>
+    <div class="callout-blue callout">
+      <p><strong>MaaS vs. GPUaaS:</strong> These are different things. MaaS provides pre-deployed model endpoints for application developers &mdash; you call an API and get tokens back. GPUaaS provides raw GPU hardware for data scientists doing training, fine-tuning, or synthetic data generation. Most organizations need both, but they serve different audiences.</p>
+    </div>
 
-        <pre><code>from openai import OpenAI
+    <h2>Why MaaS and Why Now?</h2>
 
-client = OpenAI(
-    api_key="sk-maas-premium-...",
-    base_url="https://maas.your-cluster.example.com/v1"
-)
+    <p>There are a few specific operational problems that MaaS solves that I think are quite important.</p>
 
-response = client.chat.completions.create(
-    model="granite-3.1-8b-instruct",
-    messages=[{"role": "user", "content": "Summarize this document..."}]
-)
+    <h3>Solving shadow AI</h3>
 
-print(response.choices[0].message.content)</code></pre>
+    <p>
+      Back in the day, before we had nice cloud application platforms, developers would stand up their own infrastructure and deploy their applications, a practice formally known as shadow IT. The same exists for AI applications and models: when developers can't easily get access to a model, they sign up for whatever public API they can access. The Stanford Digital Economy Lab's enterprise AI playbook of 51 case studies found that <strong>70 to 80% of employees using AI at work rely on tools not approved by their employer</strong>.
+    </p>
 
-        <p>
-            Standard OpenAI SDK. Standard model calling pattern. The only difference is the <code>base_url</code> pointing to your MaaS endpoint. Developers use tools they already know. No learning curve. No custom client libraries.
-        </p>
+    <p>
+      Personal AWS accounts. Unauthorized Claude credits. Models downloaded from HuggingFace onto department desktops. No governance, no visibility, no cost control. MaaS eliminates the incentive for shadow AI by giving developers a fast, self-service path to approved models. With a single click, you receive an API key and an endpoint.
+    </p>
 
-        <h2>Token Quota Enforcement</h2>
-        <p>
-            Here's where the subscription model earns its keep: token quotas prevent runaway costs without blocking legitimate usage.
-        </p>
-        <p>
-            Each subscription tier has a monthly token limit. As teams approach that limit, they get warnings at predictable thresholds:
-        </p>
-        <ul>
-            <li><strong>80% usage:</strong> Informational notification. "You've used 80K of your 100K monthly tokens."</li>
-            <li><strong>95% usage:</strong> Urgent warning. "You're at 95% quota. Optimize your usage or request an upgrade."</li>
-            <li><strong>100% usage:</strong> Rate limited until the next billing cycle (or an admin override).</li>
-        </ul>
-        <p>
-            Teams get clear visibility into their consumption. They see exactly how many tokens they've burned and how many remain. No surprise bills. No "who used all our tokens?" investigations at the end of the month.
-        </p>
+    <h3>Surviving model deprecations</h3>
 
-        <div class="callout">
-            <p>
-                <strong>Token quotas aren't just about cost control.</strong> They force teams to be intentional about their AI usage. Optimizing prompts. Caching responses. Choosing the right model for the task. Quotas create healthy constraints that lead to better engineering.
-            </p>
-        </div>
+    <p>
+      Every few months, a frontier model provider deprecates an older model, sometimes even without notice. If 30 of your internal applications are wired to a version that's about to disappear, you must perform 30 emergency migrations, test for regressions in behavior, fix prompts, and so on. With Model-as-a-Service, your platform team owns the model lifecycle, not a vendor.
+    </p>
 
-        <p>
-            When a team consistently hits their quota, it's a signal. Either they're growing and need a higher tier, or they're using the models inefficiently. Either way, you can have a data-driven conversation instead of reacting to an unexpected invoice.
-        </p>
+    <h3>Sovereign and air-gapped AI</h3>
 
-        <h2>Business Impact</h2>
-        <p>
-            Let's quantify what this transformation actually looks like in practice:
-        </p>
-        <ul>
-            <li><strong>50 teams provisioned in 1 hour</strong> instead of 1 week. You create the subscription tiers, map them to existing OpenShift groups, and you're done. Teams can immediately start generating keys.</li>
-            <li><strong>Admin time freed up for actual governance work.</strong> Instead of processing tickets, you're analyzing usage patterns, optimizing model deployments, and designing better access policies.</li>
-            <li><strong>Zero runaway cost incidents.</strong> Token quotas enforce hard limits. No team can accidentally burn through your entire model budget in a weekend experiment.</li>
-            <li><strong>Unified access control through OpenShift groups.</strong> You're not managing a separate identity system for MaaS. It integrates with the RBAC you already maintain.</li>
-        </ul>
-        <p>
-            This is what "governed AI consumption" actually looks like. It's not about restricting access. It's about enabling it responsibly. You're not the gatekeeper anymore. You're the architect of a system that lets teams move fast while staying within guardrails.
-        </p>
-        <p>
-            The old model scaled linearly with team count. Every new team added to your workload. The subscription model scales with configuration, not with usage. You design the tiers once. After that, onboarding 5 teams or 500 teams takes the same amount of admin effort: zero.
-        </p>
+    <p>
+      For regulated industries like healthcare, financial services, the public sector, and beyond, public-cloud AI endpoints aren't an option. MaaS lets you become your own private AI provider. Developers get the same experience of <code>POST /v1/chat/completions</code> as they would with a public model, but on a disconnected infrastructure where data remains in your environment.
+    </p>
 
-        <h2>What This Means for Platform Teams</h2>
-        <p>
-            If you're running an AI platform, this changes your job description. You shift from operational execution to strategic design. Instead of "provision this key for Team X," your work becomes:
-        </p>
-        <ul>
-            <li>Designing subscription tiers that match your organization's usage patterns</li>
-            <li>Monitoring aggregate consumption to optimize model deployments</li>
-            <li>Identifying teams that need tier upgrades before they hit quota limits</li>
-            <li>Analyzing cost per team to inform capacity planning</li>
-        </ul>
-        <p>
-            You're not processing requests. You're building systems that process themselves.
-        </p>
-        <p>
-            And when something does need your attention, it's data-driven. The subscription system surfaces actionable insights: "Team Y consistently uses 98% of their quota." That's a conversation starter about upgrading their tier or optimizing their usage. "Team Z generated a key but never used it." That's an opportunity to check in and offer support.
-        </p>
+    <h3>Insight into your user community</h3>
 
-        <h2>Try It Yourself</h2>
-        <p>
-            This is part of the Platform/Scale content pillar, focused on making enterprise AI consumption actually work at scale. If you want to see the subscription flow in action, check out the <a href="../index.html">interactive demo</a>. It walks through the admin setup, the developer experience, and the quota enforcement in a visual format.
-        </p>
-        <p>
-            RHOAI 3.4's MaaS self-service subscriptions turn the admin bottleneck into a self-service pipeline. Three-day waits become thirty-second workflows. Manual provisioning becomes automated governance. And platform teams get their time back to do actual platform work.
-        </p>
-    </article>
+    <p>
+      Every prompt flows through the gateway, which means you obtain audit logs at no cost to use for fine-tuning custom models. The code patterns are super interesting, for example, revealing what developers are trying to build, providing clearer insights than a manual survey. With public APIs, that signal goes to the vendor. With MaaS, it stays with you.
+    </p>
 
-    <footer>
-        <div class="footer-links">
-            <a href="#">Content Hub</a>
-            <a href="../index.html">Interactive Demo</a>
-        </div>
-        <div class="footer-attribution">
-            Markell Rawls | AI Developer Advocate, Red Hat
-        </div>
-    </footer>
+    <p>
+      This visibility, combined with accurate cost attribution (token-level metering per team and per model), makes this architecture a rapidly growing choice for enterprise AI workloads.
+    </p>
+
+    <h2>MaaS in Action: A Private Code Assistant for Developers</h2>
+
+    <p>
+      Let's walk through what this looks like end-to-end. For this scenario, I'm a platform administrator, and my engineering organization wants to use AI coding assistants on our infrastructure with our own models.
+    </p>
+
+    <h3>Step 1: Deploying a model as an admin</h3>
+
+    <p>
+      It all starts in the OpenShift AI dashboard, which provides AI/ML capabilities for OpenShift. From the Projects &rarr; Deployments tab, I can see what's already being served, for example, Gemma 4 and Llama 4 Scout. Both run with distributed inference with llm-d on NVIDIA L40s hardware profiles, which can result in three times the output tokens and 10 times faster time to first token.
+    </p>
+
+    <div class="callout">
+      <p><strong>Hint:</strong> Notice the <em>Model availability</em> field on each deployment. That's the toggle that makes a model available through the MaaS API gateway instead of just leaving it as an isolated deployment.</p>
+    </div>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 2: The Deployments tab in a project, where the Model availability field marks each model as exposed through MaaS.</div>
+    </div>
+
+    <p>
+      For deploying new models, the AI hub &rarr; Catalog is where you start. OpenShift AI ships with a catalog of validated models, including NVIDIA Nemotron variants, DeepSeek, and Granite. This catalog includes benchmarks, so you don't have to guess which model will perform well on your hardware.
+    </p>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 3: Filtering the catalog to Nemotron variants. Each card surfaces benchmarks and the Validated badge before you deploy.</div>
+    </div>
+
+    <h3>Step 2: Developers get self-service access</h3>
+
+    <p>
+      Here's where the experience changes for developers. Instead of filing a ticket and waiting for someone on the platform team to provision an endpoint, a developer logs in to the OpenShift AI dashboard, opens Gen AI Studio &rarr; AI asset endpoints, and sees the models their team has access to. Clicking into an endpoint reveals the API route and an API key, generated on the spot, scoped to the developer's team policy, and instantly revocable.
+    </p>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 4: From the developer's perspective, approved models are visible as ready-to-use endpoints with the option to test them in a playground.</div>
+    </div>
+
+    <h3>Step 3: Use the AI model in your IDE as a code assistant</h3>
+
+    <p>
+      The engineer then takes that endpoint URL and API key and drops them into their preferred tool, such as Claude Code or OpenCode. In this example, they use Continue, an open source VS Code extension for AI coding assistance. The entire integration requires six lines of YAML in the <code>~/.continue/config.yaml</code> file:
+    </p>
+
+    <pre><code>models:
+  - name: Meta Llama 4 Scout
+    provider: openai
+    model: "llama-4-scout"
+    apiBase: "http://maas.apps.ocp.example.com/llm/llama-4-scout/v1"
+    apiKey: "YOUR_API_KEY"</code></pre>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 5: Continue configured against the internal MaaS endpoint. From the IDE's perspective, this is an OpenAI-compatible provider.</div>
+    </div>
+
+    <p>
+      Standard OpenAI SDK. Same tools developers already know. When a request exceeds the admin-defined rate limit, the application receives a standard <strong>HTTP 429</strong> response &mdash; the same back-off mechanism every HTTP client and agentic tool already handles natively. No custom quota warning system. No CLI. Just standard HTTP semantics.
+    </p>
+
+    <h3>Step 4: The platform team monitors AI usage</h3>
+
+    <p>
+      Back on the admin side, every request the developer makes flows through the AI gateway and lands in observability. The Observe &amp; monitor &rarr; Dashboard view in OpenShift AI gives the platform team a unified picture of token use across the whole organization.
+    </p>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 6: Token and request metrics over the last 30 minutes, broken down by user, policy group, and model.</div>
+    </div>
+
+    <p>
+      For deeper performance tracking such as P90 latency (the slowest 10% of requests), error rates, GPU utilization, and request queue length &mdash; the Models tab surfaces the metrics site reliability engineers (SREs) care about.
+    </p>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 7: The Models tab displaying latency, error rates, and hardware utilization metrics.</div>
+    </div>
+
+    <p>
+      Because it's all built on Prometheus and Grafana under the hood, your existing Grafana dashboards work as well. Figure 8 shows a custom dashboard pulling token use by user and team directly from the MaaS metrics.
+    </p>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 8: Token use over the last hour, filtered by team policy group. Grafana pulling directly from MaaS metrics.</div>
+    </div>
+
+    <p>
+      When you want to correlate model behavior with what's happening on the cluster, such as a spike in latency against a specific GPU node, you can navigate directly to the OpenShift console to inspect the underlying pods.
+    </p>
+
+    <div class="figure">
+      <div class="figure-placeholder">Figure 9: The same workload viewed two ways: pod-level health in the OpenShift console and AI use in the OpenShift AI dashboard.</div>
+    </div>
+
+    <h2>The Architecture of Model-as-a-Service</h2>
+
+    <p>How does all this work behind the scenes? Let's take a look at the components that make up MaaS.</p>
+
+    <div class="architecture-stack">
+      <div class="stack-layer">
+        <h4>Infrastructure and Orchestration</h4>
+        <p>Kubernetes or Red Hat OpenShift provides a single foundation across on-premises, cloud, and edge environments. The same control plane runs your AI workloads everywhere, which matters when sovereign AI requirements mean a model has to run inside a specific country.</p>
+      </div>
+      <div class="stack-layer">
+        <h4>A Platform Designed for AI Workloads</h4>
+        <p>Red Hat OpenShift AI provides standardized model-serving runtimes, GPU-aware scheduling, and model lifecycle management. An environment built for machine learning engineers and data scientists rather than cluster administrators.</p>
+      </div>
+      <div class="stack-layer">
+        <h4>The Engine for Model Serving: vLLM and llm-d</h4>
+        <p>vLLM is an open source inference engine that serves AI models through APIs, with optimizations for large language models that make serving AI at scale cost-effective. The llm-d runtime extends this with distributed inference for even higher throughput.</p>
+      </div>
+      <div class="stack-layer">
+        <h4>An AI Gateway for Standardization</h4>
+        <p>Red Hat Connectivity Link (Envoy + Kuadrant + Istio) provides authentication, authorization, rate limiting, and usage tracking. Expose an OpenAI-compatible <code>/v1/chat/completions</code> endpoint from a vLLM-hosted model on the cluster or from external providers like AWS Bedrock, Azure, or Anthropic.</p>
+      </div>
+      <div class="stack-layer">
+        <h4>GPU Cost Attribution and Governance</h4>
+        <p>The architecture integrates with open source observability tools like Prometheus for metrics, Grafana for dashboards, and Jaeger for distributed tracing. View per-team token consumption, request rates, latency, and error rates alongside the GPU and infrastructure metrics your SREs are already watching.</p>
+      </div>
+    </div>
+
+    <div class="callout-green callout">
+      <p><strong>Centralized inference saves money.</strong> Instead of N teams each running their own shadow deployments with dedicated GPUs sitting idle, one MaaS stack pools GPU resources across the organization. Higher utilization, lower cost, full visibility. The bottleneck isn't wait time &mdash; it's getting inference centralized in the first place.</p>
+    </div>
+
+    <h2>What's the Impact and What's Next</h2>
+
+    <p>Three things happen when MaaS becomes the default pattern for deploying AI internally.</p>
+
+    <p>
+      <strong>First</strong>, developers stop waiting on tickets. With self-service API keys, the platform team isn't a bottleneck, and approved models (and guardrails) are readily available with enforceable rate limits. When limits are hit, the standard HTTP 429 response tells the application to back off &mdash; no surprise bills, no runaway costs.
+    </p>
+
+    <p>
+      <strong>Second</strong>, the platform team shifts from being a token consumer to a provider. Instead of debugging multiple teams' AI deployments, you operate a single MaaS stack, similar to how you would operate a centralized database as a service for the organization.
+    </p>
+
+    <p>
+      <strong>Finally</strong>, AI metrics integrate with your existing observability stack. Key data points like token usage, model latency, and GPU utilization collect in Prometheus and Grafana alongside your core infrastructure and cluster performance metrics.
+    </p>
+
+    <p>
+      While Red Hat OpenShift AI 3.4 made MaaS generally available, you can check out the <a href="https://docs.redhat.com/en/documentation/red_hat_openshift_ai">community documentation</a> for the latest installation and configuration information. This guide details how Red Hat's internal AI team runs MaaS for our company of approximately 20,000 employees.
+    </p>
+  </article>
+
+  <footer>
+    <div class="footer-links">
+      <a href="../index.html">Interactive Overview</a>
+    </div>
+    <div class="footer-attribution">
+      Markell Rawls | AI Developer Advocate, Red Hat
+    </div>
+  </footer>
 </body>
 </html>
