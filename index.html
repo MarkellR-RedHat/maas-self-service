@@ -745,59 +745,33 @@
     }
     drawBgParticles();
 
-    // --- Galaxy Spiral (slide 1 only) ---
+    // --- Orbital Rings (slide 1 only, adapted from AI Story orbit mode) ---
     const globeCanvas = document.getElementById('globeCanvas');
     const gCtx = globeCanvas.getContext('2d');
+    const N = 760;
+    const RAD = 0.46;
     let gW, gH, gDpr = Math.min(2, window.devicePixelRatio || 1);
     let gt = 0;
     let gmx = -1e4, gmy = -1e4;
 
-    const ARMS = 4;
-    const PER_ARM = 150;
-    const CORE_N = 50;
-    const N = CORE_N + ARMS * PER_ARM;
-    const GAL_RAD = 0.46;
-    const GP = [];
+    const GP = Array.from({length: N}, (_, i) => ({x: 0, y: 0, z: 1, seed: (i * 127.1) % 6.283}));
     let gPlaced = false;
 
-    for (let i = 0; i < CORE_N; i++) {
-      const r = 0.04 + (i / CORE_N) * 0.22;
-      const a = i * 2.399963229;
-      GP.push({ baseR: r, baseAngle: a, h: (((i * 7.31) % 1) - 0.5) * 0.08, speed: 0.20 - r * 0.25, x: 0, y: 0, z: 0, seed: i * 127.1 % 6.283 });
-    }
-    for (let arm = 0; arm < ARMS; arm++) {
-      const off = (arm / ARMS) * Math.PI * 2;
-      for (let i = 0; i < PER_ARM; i++) {
-        const t = i / PER_ARM;
-        const r = 0.14 + t * 0.86;
-        const spread = 0.03 + t * 0.12;
-        const sa = off + t * Math.PI * 3.0;
-        const dr = (((i * 13.37 + arm * 77) % 100) / 100 - 0.5) * spread * 1.6;
-        const da = (((i * 31.41 + arm * 53) % 100) / 100 - 0.5) * spread * 0.8;
-        GP.push({ baseR: r + dr, baseAngle: sa + da, h: (((i * 7.31 + arm * 19) % 100) / 100 - 0.5) * 0.04 * (1 + t * 0.5), speed: 0.18 / (0.5 + r), x: 0, y: 0, z: 0, seed: GP.length * 127.1 % 6.283 });
-      }
-    }
-
-    function galTarget(idx, cx, cy, R) {
-      const p = GP[idx];
-      const angle = p.baseAngle + gt * p.speed;
-      let px = Math.cos(angle) * p.baseR;
-      let py = p.h;
-      let pz = Math.sin(angle) * p.baseR;
-      const tilt = 0.42;
-      const ct = Math.cos(tilt), st = Math.sin(tilt);
-      const ny = py * ct - pz * st;
-      const nz = py * st + pz * ct;
-      return { x: cx + px * R, y: cy + ny * R, z: nz };
+    function gTarget(i, cx, cy, R) {
+      const rings = 6, ring = i % rings, per = Math.ceil(N / rings), idx = (i / rings | 0);
+      const dir = ring % 2 ? 1 : -1;
+      const ang = (idx / per) * 6.283 + gt * (0.18 + ring * 0.05) * dir;
+      const rad = R * (0.26 + ring * 0.135);
+      return {x: cx + Math.cos(ang) * rad, y: cy + Math.sin(ang) * rad * 0.4, z: Math.sin(ang) * 0.6 + 0.4};
     }
 
     function gResize() {
-      const rect = globeCanvas.getBoundingClientRect();
-      gW = globeCanvas.width = Math.max(1, rect.width * gDpr);
-      gH = globeCanvas.height = Math.max(1, rect.height * gDpr);
+      const r = globeCanvas.getBoundingClientRect();
+      gW = globeCanvas.width = Math.max(1, r.width * gDpr);
+      gH = globeCanvas.height = Math.max(1, r.height * gDpr);
       if (!gPlaced) {
-        const cx = gW / 2, cy = gH / 2, R = Math.min(gW, gH) * GAL_RAD;
-        for (let i = 0; i < N; i++) { const tg = galTarget(i, cx, cy, R); GP[i].x = tg.x; GP[i].y = tg.y; }
+        const cx = gW / 2, cy = gH / 2, R = Math.min(gW, gH) * RAD;
+        for (let i = 0; i < N; i++) { const tg = gTarget(i, cx, cy, R); GP[i].x = tg.x; GP[i].y = tg.y; }
         gPlaced = true;
       }
     }
@@ -805,33 +779,32 @@
     function gFrame() {
       if (currentSlide !== 0) { requestAnimationFrame(gFrame); return; }
       gCtx.clearRect(0, 0, gW, gH);
-      const cx = gW / 2, cy = gH / 2, R = Math.min(gW, gH) * GAL_RAD;
-      const rep = 90 * gDpr, rep2 = rep * rep;
+      const cx = gW / 2, cy = gH / 2, R = Math.min(gW, gH) * RAD;
+      const rep = 110 * gDpr, rep2 = rep * rep;
 
       for (let i = 0; i < N; i++) {
         const p = GP[i];
-        const tg = galTarget(i, cx, cy, R);
-        p.x += (tg.x - p.x) * 0.1;
-        p.y += (tg.y - p.y) * 0.1;
-        p.z += (tg.z - p.z) * 0.12;
+        const tg = gTarget(i, cx, cy, R);
+        p.x += (tg.x - p.x) * 0.15;
+        p.y += (tg.y - p.y) * 0.15;
+        p.z += (tg.z - p.z) * 0.17;
 
         const dx = p.x - gmx, dy = p.y - gmy, dd = dx * dx + dy * dy;
         if (dd < rep2) { const d = Math.sqrt(dd) || 1, f = (rep - d) / rep * 10 * gDpr; p.x += dx / d * f; p.y += dy / d * f; }
 
-        const depth = 0.35 + 0.65 * Math.max(0, (p.z + 1) / 2);
-        const coreness = p.baseR < 0.25 ? 1.15 : 1.0;
-        const rr = (1.3 + 1.6 * depth) * gDpr * coreness;
-        const hue = Math.max(0, Math.min(25, (p.baseR * 20) + Math.sin(gt * 0.3 + p.seed) * 3));
+        const depth = 0.35 + 0.65 * Math.max(0, p.z);
+        const rr = (1.7 + 2.0 * depth) * gDpr;
+        const hue = 0 + Math.max(0, Math.min(1, p.x / gW + Math.sin(gt * 0.3 + p.seed) * 0.03)) * 25;
 
-        gCtx.shadowBlur = (3 + depth * 10) * gDpr * coreness;
-        gCtx.shadowColor = 'hsla(' + hue + ',90%,50%,0.55)';
+        gCtx.shadowBlur = (4 + depth * 9) * gDpr;
+        gCtx.shadowColor = 'hsla(' + hue + ',88%,50%,0.55)';
         gCtx.beginPath();
         gCtx.arc(p.x, p.y, rr, 0, 7);
-        gCtx.fillStyle = 'hsla(' + hue + ',90%,48%,' + (0.3 + 0.6 * depth * coreness) + ')';
+        gCtx.fillStyle = 'hsla(' + hue + ',88%,48%,' + (0.4 + 0.55 * depth) + ')';
         gCtx.fill();
       }
       gCtx.shadowBlur = 0;
-      gt += 0.014;
+      gt += 0.022;
       requestAnimationFrame(gFrame);
     }
 
