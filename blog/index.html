@@ -121,11 +121,6 @@
 
     .callout p { margin-bottom: 0; }
 
-    .callout-blue {
-      background: #f0f6ff;
-      border-left-color: #3a7bd5;
-    }
-
     .callout-green {
       background: #f0faf5;
       border-left-color: #2e8b57;
@@ -182,31 +177,6 @@
     a { color: #CC0000; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    .distinction-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .distinction-card {
-      background: #f8f8f8;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 1.25rem;
-    }
-
-    .distinction-card h4 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .distinction-card p {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 0;
-    }
-
     .architecture-stack {
       margin: 1.5rem 0;
     }
@@ -262,7 +232,6 @@
       .header-banner .subtitle { font-size: 1rem; }
       article { padding: 1.5rem; }
       h2 { font-size: 1.4rem; }
-      .distinction-box { grid-template-columns: 1fr; }
       .meta-inner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     }
   </style>
@@ -311,10 +280,6 @@
       <li>One observability stack for every AI workload in the company</li>
       <li>Full control over the underlying models, data paths, and infrastructure</li>
     </ul>
-
-    <div class="callout-blue callout">
-      <p><strong>MaaS vs. GPUaaS:</strong> These are different things. MaaS provides pre-deployed model endpoints for application developers &mdash; you call an API and get tokens back. GPUaaS provides raw GPU hardware for data scientists doing training, fine-tuning, or synthetic data generation. Most organizations need both, but they serve different audiences.</p>
-    </div>
 
     <h2>Why MaaS and Why Now?</h2>
 
